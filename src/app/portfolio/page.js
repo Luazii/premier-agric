@@ -10,10 +10,7 @@ export default function Portfolio(){
   return (
     <>
       <Header />
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <h1 className="text-3xl font-bold">Portfolio</h1>
-        <p className="text-gray-600 mt-2">Click any item to open the Instagram post (video & reels live there).</p>
-      </div>
+    
       <PortfolioGallery items={items} />
     </>
   );
