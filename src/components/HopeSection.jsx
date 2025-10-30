@@ -23,12 +23,12 @@ export default function HopeSection() {
           viewport={{ once: true }}
           className="mt-6 text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto"
         >
-          At Premier Agric, we are more than just an agriculture provider — we are
-          partners in your success. Our approach combines innovative technology,
-          sustainable practices, and a deep commitment to supporting farmers. With a
-          focus on maximizing productivity and reducing costs, we deliver solutions
-          tailored to meet your unique needs. Trust us to help you grow smarter,
-          sustainably, and profitably.
+        
+At Premier Agric, we don’t just provide agricultural solutions, we walk beside you every step of the way. Your success is at 
+ the heart of everything we do. By blending cutting-edge technology with sustainable, farmer-first 
+ practices, we help you grow stronger, smarter, and more resilient. Every farm is unique, and so are our solutions. Which are designed to boost 
+ productivity, lower costs, and nurture lasting growth. With Premier Agric, you’re not just farming, you’re building a sustainable future. we’re honored to be your partner on that journey.
+
         </motion.p>
 
         {/* PILLARS */}
@@ -82,7 +82,7 @@ export default function HopeSection() {
             viewport={{ once: true }}
             className="mt-6 max-w-3xl mx-auto text-lg text-white/90 leading-relaxed"
           >
-            Each consultation, each field visit, each training session — is a seed of
+            Each consultation, each field visit, each training session, is a seed of
             hope. Together, we can nurture a generation of farmers and agribusinesses
             ready to feed nations and shape a greener future.
           </motion.p>

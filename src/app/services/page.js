@@ -49,7 +49,7 @@ export default function Services() {
           viewport={{ once: true }}
           className="text-3xl md:text-4xl font-bold text-primary font-display"
         >
-          Nurturing Agriculture, Empowering Futures
+          Developing Agriculture, Nurturing Futures
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 30 }}
@@ -58,9 +58,9 @@ export default function Services() {
           viewport={{ once: true }}
           className="mt-6 text-lg"
         >
-          At Premier Agric, we’re more than a service provider — we’re partners in
+          At Premier Agric, we’re more than a service provider, we’re partners in
           purpose. Our work bridges innovation with compassion, ensuring that every
-          farmer, cooperative, and agribusiness has the support to thrive in a changing
+          farmer,, project, cooperative, and agribusiness has the support to thrive in a changing
           world.
         </motion.p>
         <motion.p
@@ -72,7 +72,7 @@ export default function Services() {
         >
           From strategic agribusiness consulting to hands-on training and precision data
           services, our goal is to make agriculture more efficient, profitable, and
-          sustainable — while keeping people and planet at the heart of everything we do.
+          sustainable, while keeping people and planet at the heart of everything we do.
         </motion.p>
       </section>
 

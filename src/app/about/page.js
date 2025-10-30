@@ -45,14 +45,14 @@ export default function About() {
             Our Story
           </h2>
           <p className="mt-6 leading-relaxed text-lg">
-            Premier Agric was born from a shared belief — that true agricultural transformation
+            Premier Agric was born from a shared belief that true agricultural transformation
             starts with people. Established in 2020, we bring together over a decade of hands-on
             experience in agricultural facilitation, mentorship, and innovation. We’re more than
             consultants; we’re partners in purpose, walking alongside farmers, graduates, and
             cooperatives as they turn potential into thriving success stories.
           </p>
-          <p className="mt-6 leading-relaxed text-lg">
-            Every project we touch carries the heartbeat of empowerment. From smallholder farmers
+         <p className="mt-6 leading-relaxed text-lg">  {/* CARRIES THE POWER OF HOPE */}
+            Every project we touch carries a symbol of hope. From smallholder farmers
             finding their footing to young graduates gaining real-world experience, our goal is to
             create systems that grow with integrity, innovation, and sustainability.
           </p>
@@ -67,7 +67,7 @@ export default function About() {
           >
             <h3 className="text-2xl font-semibold text-primary mb-3">Our Essence</h3>
             <p className="text-lg leading-relaxed">
-              We believe in a future where every farmer — emerging or commercial — grows with
+              We believe in a future where every farmer, emerging or commercial, grows with
               confidence and dignity. Where innovation and tradition work hand in hand. Where food
               security isn’t just a goal, but a shared responsibility carried with pride.
             </p>
@@ -111,12 +111,12 @@ export default function About() {
           >
             <h3 className="text-2xl font-semibold text-primary mb-3">Our Promise</h3>
             <p className="text-lg leading-relaxed">
-              We exist to stand beside those who feed nations — empowering them with tools,
-              technology, and trust. For us, every dataset, drone flight, and mentorship session is
+              We exist to stand beside those who feed nations empowering them with tools,
+              technology, and trust. For us, every training, every consultation, and mentorship session is
               a seed planted toward resilience, purpose, and self-sufficiency.
             </p>
             <p className="mt-4 text-lg leading-relaxed">
-              Because the future of agriculture is not built by companies — it’s grown by people,
+              Because the future of agriculture is not built by companies, it’s grown by people,
               together.
             </p>
           </motion.div>
@@ -131,7 +131,7 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="text-3xl md:text-4xl font-bold font-display"
           >
-            You’re Not Just Visiting — You’re Joining Hands with Empowerment
+            You’re Not Just Visiting. You’re Joining Hands with Empowerment
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -139,7 +139,7 @@ export default function About() {
             transition={{ delay: 0.3 }}
             className="mt-6 text-lg text-white/90 max-w-2xl mx-auto"
           >
-            From the soil to the satellite, from learning to leading — Premier Agric is where
+            From the soil to the satellite, from learning to leading Premier Agric is where
             innovation meets humanity. Together, we’re reimagining what African agriculture can be.
           </motion.p>
           <div className="mt-8">

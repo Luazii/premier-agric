@@ -22,7 +22,7 @@ export default function PortfolioGallery() {
       id: 2,
       type: 'image',
       category: 'projects',
-      title: 'Drone Field Survey',
+      title: 'Smart Farming ',
       description: 'Precision mapping to monitor and optimize crop health.',
       image: '/images/portfolio-2.jpg',
       tags: ['Drone', 'Innovation']
@@ -57,7 +57,7 @@ export default function PortfolioGallery() {
       title: 'Empowering Farmers',
       description: 'Snapshots from a farmer training workshop.',
       image: '/images/social-facebook-thumb.jpg',
-      embed: 'https://www.facebook.com/premieragric/posts/123456789',
+      embed: 'https://www.facebook.com/share/v/19qsmo2tqZ/',
       tags: ['Training', 'Empowerment']
     }
   ]
@@ -106,7 +106,7 @@ export default function PortfolioGallery() {
           </h1>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
             Step into the fields of change — where innovation, empowerment, and purpose take root. 
-            Every project, every farmer, every drone flight tells a story of hope.
+            Every project, every farmer, every seed tells a story of hope.
           </p>
 
           <div className="flex flex-wrap justify-center gap-3">
@@ -212,7 +212,7 @@ export default function PortfolioGallery() {
         <p className="max-w-3xl mx-auto text-gray-700 leading-relaxed mb-10">
           At Premier Agric, every seed we plant, every farmer we empower, and every partnership we forge 
           is a step toward a more sustainable and equitable future. Together, we cultivate not only crops 
-          but dreams, resilience, and self-sufficiency for generations to come.
+          but nurture dreams, resilience, and self-sufficiency for generations to come.
         </p>
 
         <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto text-left">
@@ -233,7 +233,7 @@ export default function PortfolioGallery() {
             <p className="text-gray-700">
               Through mentorship, we bridge the gap between generations of farmers — blending 
               experience with innovation. Our goal is to inspire and equip a new wave of 
-              agricultural leaders to grow not just produce, but prosperity.
+              agricultural leaders to grow not just produce, but to prosper.
             </p>
             <a href="/contact" className="inline-block mt-5 text-green-700 font-semibold hover:underline">
               Visit Gallery →

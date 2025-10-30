@@ -38,7 +38,7 @@ export default function ServicesGrid() {
         viewport={{ once: true }}
         className="text-center text-gray-700 max-w-2xl mx-auto mt-4"
       >
-        Every service we offer is rooted in one belief — that when we invest in farmers,
+        Every solution we offer is rooted in one belief, that when we invest in farmers,
         we invest in the future. Explore how we help agricultural enterprises grow
         stronger, smarter, and more sustainable.
       </motion.p>
