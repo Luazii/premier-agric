@@ -10,7 +10,7 @@ export default function Hero() {
       <div className="absolute inset-0 flex flex-col">
         <Header />
         <div className="max-w-6xl mx-auto px-6 flex-1 flex items-end">
-          <div className="mb-12 bg-white/10 glass p-8 rounded-2xl max-w-3xl">
+          <div className="mb-12 p-8 rounded-2xl max-w-3xl">
             <h1 className="text-5xl md:text-7xl font-display font-extrabold text-white hero-title leading-tight">PREMIER AGRIC</h1>
             <p className="mt-4 text-white/90 max-w-xl">Sustainable agriculture | Drone & remote sensing | Data as a Service — helping farmers make better decisions.</p>
             <div className="mt-6 flex gap-3">
