@@ -38,15 +38,15 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center">
-            <img
-              src="/images/logo.png"
-              alt="Premier Agric Logo"
-              className="h-10 w-auto object-contain"
-              width={140}
-              height={40}
-            />
-          </a>
+<a href="/" className="flex items-center">
+  <img
+    src="/images/logo.png"
+    alt="Premier Agric Logo"
+    className="h-14 w-auto object-contain" // Changed h-10 to h-12
+    width={176}                             // Changed 140 to 168
+    height={56}                              // Changed 40 to 48
+  />
+</a>
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center space-x-8">
@@ -59,7 +59,7 @@ export default function Header() {
                     ? 'text-[#FDE335]'
                     : scrollY > 50
                       ? 'text-white hover:text-[#FDE335]'
-                      : 'text-[#090B05] hover:text-[#688E3C]'
+                      : 'text-white hover:text-[#688E3C]'
                 }`}
               >
                 {item.name}
@@ -100,7 +100,8 @@ export default function Header() {
             {isMenuOpen ? (
               <X
                 className={`w-6 h-6 ${
-                  scrollY > 50 ? 'text-white' : 'text-[#090B05]'
+                  // Logic change: Icon is always white when menu is open
+                  isMenuOpen || scrollY > 50 ? 'text-white' : 'text-[#090B05]'
                 }`}
               />
             ) : (
@@ -118,9 +119,9 @@ export default function Header() {
       {isMenuOpen && (
         <div
           className={`lg:hidden backdrop-blur-lg border-t transition-colors duration-300 ${
-            scrollY > 50
-              ? 'bg-[#688E3C]/95 border-[#577d31]'
-              : 'bg-white/95 border-gray-200'
+            // --- CHANGE 1 ---
+            // Removed conditional. Mobile menu background is now ALWAYS green.
+            'bg-[#688E3C]/95 border-[#577d31]'
           }`}
         >
           <div className="px-6 py-6 space-y-4">
@@ -129,11 +130,11 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 className={`block text-lg font-medium transition-colors ${
+                  // --- CHANGE 2 ---
+                  // Simplified text color. It's now ALWAYS light.
                   isActive(item.href)
                     ? 'text-[#FDE335]'
-                    : scrollY > 50
-                      ? 'text-white hover:text-[#FDE335]'
-                      : 'text-[#090B05] hover:text-[#688E3C]'
+                    : 'text-white hover:text-[#FDE335]'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -144,9 +145,9 @@ export default function Header() {
               <a
                 href="/contact"
                 className={`block text-center border rounded-md px-4 py-2 font-medium transition-colors duration-300 ${
-                  scrollY > 50
-                    ? 'border-white text-white hover:bg-white hover:text-[#688E3C]'
-                    : 'border-[#688E3C] text-[#688E3C] hover:bg-[#688E3C] hover:text-white'
+                  // --- CHANGE 3 ---
+                  // Simplified button color. It's now ALWAYS the light version.
+                  'border-white text-white hover:bg-white hover:text-[#688E3C]'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -155,9 +156,9 @@ export default function Header() {
               <a
                 href="tel:+27-73-561-3851"
                 className={`block text-center rounded-md px-4 py-2 font-medium transition-colors duration-300 ${
-                  scrollY > 50
-                    ? 'bg-[#FDE335] text-[#090B05] hover:bg-yellow-400'
-                    : 'bg-[#688E3C] text-white hover:bg-[#577d31]'
+                  // --- CHANGE 4 ---
+                  // Simplified button color. It's now ALWAYS the yellow version.
+                  'bg-[#FDE335] text-[#090B05] hover:bg-yellow-400'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >

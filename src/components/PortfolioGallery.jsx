@@ -24,7 +24,7 @@ export default function PortfolioGallery() {
       category: 'projects',
       title: 'Smart Farming ',
       description: 'Precision mapping to monitor and optimize crop health.',
-      image: '/images/portfolio-2.jpg',
+      image: '/images/portfolio-4.jpg',
       tags: ['Drone', 'Innovation']
     },
     {
@@ -33,7 +33,7 @@ export default function PortfolioGallery() {
       category: 'projects',
       title: 'Youth in Agriculture Initiative',
       description: 'Training and inspiring the next generation of agripreneurs.',
-      image: '/images/portfolio-3.jpg',
+      image: '/images/portfolio-5.jpg',
       tags: ['Youth', 'Training']
     },
 

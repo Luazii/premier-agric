@@ -6,12 +6,12 @@ export default function ServicesGrid() {
     {
       title: 'Agribusiness Consulting',
       body: 'Navigate the complexities of agriculture with tailored strategies that turn ideas into thriving ventures. From business planning and market analysis to sustainability models — we walk beside you every step.',
-      img: '/images/service-1.jpg',
+      img: '/images/service-4.jpg',
     },
     {
       title: 'Training & Capacity Building',
       body: 'Empower your team with hands-on knowledge. Our training cultivates confidence — from modern farming techniques and machinery use to management and stewardship that honours both people and planet.',
-      img: '/images/service-2.jpg',
+      img: '/images/service-5.jpg',
     },
     // {
     //   title: 'Precision Mapping & Data Insights',
