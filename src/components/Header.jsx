@@ -40,7 +40,7 @@ export default function Header() {
           {/* Logo */}
 <a href="/" className="flex items-center">
   <img
-    src="/images/logo.png"
+    src="/images/Logo.png"
     alt="Premier Agric Logo"
     className="h-14 w-auto object-contain" // Changed h-10 to h-12
     width={176}                             // Changed 140 to 168

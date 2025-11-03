@@ -33,7 +33,7 @@ export default function Footer() {
         {/* Brand */}
         <div>
           <img
-            src="/images/logo.png"
+            src="/images/Logo.png"
             alt="Premier Agric Logo"
             className="h-10 w-auto mb-6"
           />
