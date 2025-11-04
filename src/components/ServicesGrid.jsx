@@ -42,7 +42,7 @@ export default function ServicesGrid() {
       </motion.p>
 
       {/* Services Grid */}
-<div className="grid gap-10 md:grid-cols-3 justify-center mt-16 max-w-5xl mx-auto">
+<div className="flex gap-10 md:grid-cols-3 justify-center mt-16 max-w-5xl mx-auto">
 
         {services.map((s, i) => (
           <motion.article
