@@ -60,7 +60,7 @@ export default function Services() {
         >
           At Premier Agric, we’re more than a service provider, we’re partners in
           purpose. Our work bridges innovation with compassion, ensuring that every
-          farmer,, project, cooperative, and agribusiness has the support to thrive in a changing
+          farmer, project, cooperative, and agribusiness has the support to thrive in a changing
           world.
         </motion.p>
         <motion.p

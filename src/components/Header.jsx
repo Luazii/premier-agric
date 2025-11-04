@@ -8,6 +8,7 @@ export default function Header() {
   const [scrollY, setScrollY] = useState(0)
   const pathname = usePathname()
 
+  // Listen for scroll
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener('scroll', handleScroll)
@@ -19,7 +20,7 @@ export default function Header() {
     { name: 'About', href: '/about' },
     { name: 'Services', href: '/services' },
     { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Contact', href: '/contact' }
+    { name: 'Contact', href: '/contact' },
   ]
 
   const isActive = (href) => {
@@ -27,39 +28,46 @@ export default function Header() {
     return pathname.startsWith(href)
   }
 
+  // Determine if header should be transparent or always green
+  const transparentPages = ['/', '/about', '/services']
+  const isTransparentPage = transparentPages.includes(pathname)
+
+  const showGreenBackground =
+    !isTransparentPage || scrollY > 50 // always green except on transparent pages
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrollY > 50
-          ? 'bg-[#688E3C]/95 backdrop-blur-md shadow-lg'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        showGreenBackground
+          ? 'bg-[#688E3C]/95 backdrop-blur-md shadow-md'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-<a href="/" className="flex items-center">
-  <img
-    src="/images/Logo.png"
-    alt="Premier Agric Logo"
-    className="h-14 w-auto object-contain" // Changed h-10 to h-12
-    width={176}                             // Changed 140 to 168
-    height={56}                              // Changed 40 to 48
-  />
-</a>
+          <a href="/" className="flex items-center">
+            <img
+              src="/images/Logo.png"
+              alt="Premier Agric Logo"
+              className="h-14 w-auto object-contain"
+              width={176}
+              height={56}
+            />
+          </a>
 
-          {/* Desktop Nav */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             {navigation.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className={`font-medium transition-colors duration-200 ${
+                className={`font-medium transition-colors duration-300 ${
                   isActive(item.href)
                     ? 'text-[#FDE335]'
-                    : scrollY > 50
-                      ? 'text-white hover:text-[#FDE335]'
-                      : 'text-white hover:text-[#688E3C]'
+                    : showGreenBackground
+                    ? 'text-white hover:text-[#FDE335]'
+                    : 'text-white hover:text-[#FDE335]'
                 }`}
               >
                 {item.name}
@@ -67,14 +75,14 @@ export default function Header() {
             ))}
           </div>
 
-          {/* CTA */}
+          {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <a
               href="/contact"
               className={`px-4 py-2 border rounded-md font-medium transition-colors duration-300 ${
-                scrollY > 50
+                showGreenBackground
                   ? 'border-white text-white hover:bg-white hover:text-[#688E3C]'
-                  : 'border-[#688E3C] text-[#688E3C] hover:bg-[#688E3C] hover:text-white'
+                  : 'border-white text-white hover:bg-white hover:text-[#688E3C]'
               }`}
             >
               Get in Touch
@@ -82,9 +90,9 @@ export default function Header() {
             <a
               href="tel:+27-73-561-3851"
               className={`px-4 py-2 rounded-md flex items-center font-medium transition-colors duration-300 ${
-                scrollY > 50
+                showGreenBackground
                   ? 'bg-[#FDE335] text-[#090B05] hover:bg-yellow-400'
-                  : 'bg-[#688E3C] text-white hover:bg-[#577d31]'
+                  : 'bg-[#FDE335] text-[#090B05] hover:bg-yellow-400'
               }`}
             >
               <Phone className="w-4 h-4 mr-2" /> Call Now
@@ -100,14 +108,13 @@ export default function Header() {
             {isMenuOpen ? (
               <X
                 className={`w-6 h-6 ${
-                  // Logic change: Icon is always white when menu is open
-                  isMenuOpen || scrollY > 50 ? 'text-white' : 'text-[#090B05]'
+                  showGreenBackground ? 'text-white' : 'text-white'
                 }`}
               />
             ) : (
               <Menu
                 className={`w-6 h-6 ${
-                  scrollY > 50 ? 'text-white' : 'text-[#090B05]'
+                  showGreenBackground ? 'text-white' : 'text-white'
                 }`}
               />
             )}
@@ -115,13 +122,13 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div
           className={`lg:hidden backdrop-blur-lg border-t transition-colors duration-300 ${
-            // --- CHANGE 1 ---
-            // Removed conditional. Mobile menu background is now ALWAYS green.
-            'bg-[#688E3C]/95 border-[#577d31]'
+            showGreenBackground
+              ? 'bg-[#688E3C]/95 border-[#577d31]'
+              : 'bg-black/60 border-transparent'
           }`}
         >
           <div className="px-6 py-6 space-y-4">
@@ -129,38 +136,30 @@ export default function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className={`block text-lg font-medium transition-colors ${
-                  // --- CHANGE 2 ---
-                  // Simplified text color. It's now ALWAYS light.
+                onClick={() => setIsMenuOpen(false)}
+                className={`block text-lg font-medium transition-all ${
                   isActive(item.href)
                     ? 'text-[#FDE335]'
                     : 'text-white hover:text-[#FDE335]'
                 }`}
-                onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
               </a>
             ))}
+
+            {/* Buttons inside mobile menu */}
             <div className="pt-4 space-y-3">
               <a
                 href="/contact"
-                className={`block text-center border rounded-md px-4 py-2 font-medium transition-colors duration-300 ${
-                  // --- CHANGE 3 ---
-                  // Simplified button color. It's now ALWAYS the light version.
-                  'border-white text-white hover:bg-white hover:text-[#688E3C]'
-                }`}
                 onClick={() => setIsMenuOpen(false)}
+                className="block text-center border border-white text-white rounded-md px-4 py-2 font-medium hover:bg-white hover:text-[#688E3C] transition-all"
               >
                 Get in Touch
               </a>
               <a
                 href="tel:+27-73-561-3851"
-                className={`block text-center rounded-md px-4 py-2 font-medium transition-colors duration-300 ${
-                  // --- CHANGE 4 ---
-                  // Simplified button color. It's now ALWAYS the yellow version.
-                  'bg-[#FDE335] text-[#090B05] hover:bg-yellow-400'
-                }`}
                 onClick={() => setIsMenuOpen(false)}
+                className="block text-center rounded-md px-4 py-2 font-medium bg-[#FDE335] text-[#090B05] hover:bg-yellow-400 transition-all"
               >
                 <Phone className="w-4 h-4 mr-2 inline" /> Call Now
               </a>

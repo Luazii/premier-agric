@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Play, X, Instagram, Linkedin, Facebook, Twitter, ArrowLeft, ArrowRight } from 'lucide-react'
+import { X, ArrowLeft, ArrowRight } from 'lucide-react'
 
 export default function PortfolioGallery() {
   const [selectedMedia, setSelectedMedia] = useState(null)
@@ -22,7 +22,7 @@ export default function PortfolioGallery() {
       id: 2,
       type: 'image',
       category: 'projects',
-      title: 'Smart Farming ',
+      title: 'Smart Farming',
       description: 'Precision mapping to monitor and optimize crop health.',
       image: '/images/portfolio-4.jpg',
       tags: ['Drone', 'Innovation']
@@ -33,11 +33,11 @@ export default function PortfolioGallery() {
       category: 'projects',
       title: 'Youth in Agriculture Initiative',
       description: 'Training and inspiring the next generation of agripreneurs.',
-      image: '/images/portfolio-5.jpg',
+      image: '/images/pexels-gary-barnes-6231693.jpg',
       tags: ['Youth', 'Training']
     },
 
-    // Social Media Posts (static previews)
+    // Social Media Posts
     {
       id: 4,
       type: 'social',
@@ -45,8 +45,8 @@ export default function PortfolioGallery() {
       category: 'social',
       title: 'Hope Grows Here',
       description: 'Moments from our community outreach.',
-      image: '/images/social-instagram-thumb.jpg',
-      embed: 'https://www.instagram.com/p/Cxyz12345/',
+      image: '/images/instagram.jpg',
+      embed: 'https://www.instagram.com/p/DPdwT-RjmbK/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
       tags: ['Community', 'Hope']
     },
     {
@@ -54,10 +54,10 @@ export default function PortfolioGallery() {
       type: 'social',
       platform: 'Facebook',
       category: 'social',
-      title: 'Empowering Farmers',
-      description: 'Snapshots from a farmer training workshop.',
-      image: '/images/social-facebook-thumb.jpg',
-      embed: 'https://www.facebook.com/share/v/19qsmo2tqZ/',
+      title: 'Shade Net and Tunnel Systems',
+      description: 'Unlock the Future of Farming with Shade Net & Tunnel Systems.',
+      image: '/images/facebook.jpg',
+      embed: 'https://www.facebook.com/share/v/1CmGR2LjbX/',
       tags: ['Training', 'Empowerment']
     }
   ]
@@ -70,10 +70,16 @@ export default function PortfolioGallery() {
 
   const categories = categoryList.map((c) => ({
     ...c,
-    count: c.id === 'all' ? galleryItems.length : galleryItems.filter(item => item.category === c.id).length
+    count:
+      c.id === 'all'
+        ? galleryItems.length
+        : galleryItems.filter((item) => item.category === c.id).length
   }))
 
-  const filteredItems = activeTab === 'all' ? galleryItems : galleryItems.filter(item => item.category === activeTab)
+  const filteredItems =
+    activeTab === 'all'
+      ? galleryItems
+      : galleryItems.filter((item) => item.category === activeTab)
 
   const openModal = (item) => {
     setSelectedMedia(item)
@@ -151,7 +157,7 @@ export default function PortfolioGallery() {
         </div>
       </div>
 
-      {/* Modal with Carousel */}
+      {/* Modal */}
       {selectedMedia && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
           <button
@@ -176,14 +182,22 @@ export default function PortfolioGallery() {
           </button>
 
           <div className="bg-white rounded-2xl max-w-4xl w-full mx-4 overflow-hidden">
+            {/* If it's social media, show thumbnail and external link */}
             {selectedMedia.type === 'social' ? (
-              <div className="aspect-video bg-gray-100 flex items-center justify-center">
-                <iframe
-                  src={selectedMedia.embed}
-                  className="w-full h-full border-0"
-                  allowFullScreen
-                  title={selectedMedia.title}
-                ></iframe>
+              <div className="aspect-video bg-gray-100 flex flex-col items-center justify-center">
+                <img
+                  src={selectedMedia.image}
+                  alt={selectedMedia.title}
+                  className="w-full h-full object-cover"
+                />
+                <a
+                  href={selectedMedia.embed}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-4 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition-all"
+                >
+                  View on {selectedMedia.platform}
+                </a>
               </div>
             ) : (
               <img
@@ -198,7 +212,12 @@ export default function PortfolioGallery() {
               <p className="text-gray-600 mb-4">{selectedMedia.description}</p>
               <div className="flex flex-wrap gap-2">
                 {selectedMedia.tags?.map((tag, index) => (
-                  <span key={index} className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">{tag}</span>
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full"
+                  >
+                    {tag}
+                  </span>
                 ))}
               </div>
             </div>
@@ -208,7 +227,9 @@ export default function PortfolioGallery() {
 
       {/* Heartwarming Section */}
       <section className="bg-white text-center py-20 px-6 lg:px-16">
-        <h2 className="text-3xl lg:text-4xl font-bold text-green-700 mb-6">Hope Grows Beyond the Fields</h2>
+        <h2 className="text-3xl lg:text-4xl font-bold text-green-700 mb-6">
+          Hope Grows Beyond the Fields
+        </h2>
         <p className="max-w-3xl mx-auto text-gray-700 leading-relaxed mb-10">
           At Premier Agric, every seed we plant, every farmer we empower, and every partnership we forge 
           is a step toward a more sustainable and equitable future. Together, we cultivate not only crops 
@@ -217,25 +238,35 @@ export default function PortfolioGallery() {
 
         <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto text-left">
           <div className="bg-green-50 rounded-2xl p-8 shadow-sm">
-            <h3 className="text-2xl font-semibold text-green-700 mb-3">Training & Development</h3>
+            <h3 className="text-2xl font-semibold text-green-700 mb-3">
+              Training & Development
+            </h3>
             <p className="text-gray-700">
               Our training programs are designed to empower farmers with hands-on knowledge — 
               from sustainable farming to agribusiness management. We believe education is the 
               first step toward long-term transformation.
             </p>
-            <a href="/contact" className="inline-block mt-5 text-green-700 font-semibold hover:underline">
+            <a
+              href="/contact"
+              className="inline-block mt-5 text-green-700 font-semibold hover:underline"
+            >
               Visit Gallery →
             </a>
           </div>
 
           <div className="bg-green-50 rounded-2xl p-8 shadow-sm">
-            <h3 className="text-2xl font-semibold text-green-700 mb-3">Farmer Mentorships</h3>
+            <h3 className="text-2xl font-semibold text-green-700 mb-3">
+              Farmer Mentorships
+            </h3>
             <p className="text-gray-700">
               Through mentorship, we bridge the gap between generations of farmers — blending 
               experience with innovation. Our goal is to inspire and equip a new wave of 
               agricultural leaders to grow not just produce, but to prosper.
             </p>
-            <a href="/contact" className="inline-block mt-5 text-green-700 font-semibold hover:underline">
+            <a
+              href="/contact"
+              className="inline-block mt-5 text-green-700 font-semibold hover:underline"
+            >
               Visit Gallery →
             </a>
           </div>

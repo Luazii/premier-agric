@@ -6,31 +6,29 @@ export default function ServicesGrid() {
     {
       title: 'Agribusiness Consulting',
       body: 'Navigate the complexities of agriculture with tailored strategies that turn ideas into thriving ventures. From business planning and market analysis to sustainability models — we walk beside you every step.',
-      img: '/images/service-4.jpg',
+      img: '/images/service-6.jpg',
     },
     {
       title: 'Training & Capacity Building',
       body: 'Empower your team with hands-on knowledge. Our training cultivates confidence — from modern farming techniques and machinery use to management and stewardship that honours both people and planet.',
       img: '/images/service-5.jpg',
     },
-    // {
-    //   title: 'Precision Mapping & Data Insights',
-    //   body: 'Through advanced drone mapping, satellite analytics, and data interpretation, we transform field information into clear, actionable insights that boost productivity and sustainability.',
-    //   img: '/images/service-3.jpg',
-    // },
+    // You can easily add more cards later
   ]
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-20">
+      {/* Section Title */}
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="text-3xl md:text-4xl font-bold text-center font-display text-primary"
+        className="text-3xl md:text-4xl font-bold text-center font-display text-[#688E3C]"
       >
         Cultivating Growth Through Purpose-Driven Solutions
       </motion.h2>
+
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -43,32 +41,40 @@ export default function ServicesGrid() {
         stronger, smarter, and more sustainable.
       </motion.p>
 
-      <div className="grid gap-10 md:grid-cols-3 mt-16">
+      {/* Services Grid */}
+<div className="grid gap-10 md:grid-cols-3 justify-center mt-16 max-w-5xl mx-auto">
+
         {services.map((s, i) => (
           <motion.article
             key={i}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: i * 0.1 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.7, delay: i * 0.1, ease: 'easeOut' }}
             viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-md bg-white hover:shadow-xl transition-all duration-300 flex flex-col"
+            className="rounded-2xl overflow-hidden shadow-md bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col group"
           >
-            <div className="h-56 overflow-hidden relative">
-              <img
+            {/* Image with overlay hover */}
+            <div className="relative h-56 overflow-hidden">
+              <motion.img
                 src={s.img}
                 alt={s.title}
-                className="w-full h-full object-cover transform hover:scale-105 transition duration-500"
+                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60 group-hover:opacity-80 transition duration-500"></div>
             </div>
+
+            {/* Content */}
             <div className="p-6 flex flex-col flex-1">
-              <h3 className="text-xl font-semibold text-primary">{s.title}</h3>
+              <h3 className="text-xl font-semibold text-[#688E3C] group-hover:text-[#577D31] transition-colors duration-300">
+                {s.title}
+              </h3>
               <p className="mt-3 text-gray-700 text-sm leading-relaxed flex-1">
                 {s.body}
               </p>
               <a
                 href="/contact"
-                className="mt-6 inline-block self-start text-sm font-medium text-primary hover:text-fresh"
+                className="mt-6 inline-block self-start text-sm font-medium text-[#688E3C] hover:text-[#FDE335] transition-colors duration-300"
               >
                 Let’s Grow Together →
               </a>

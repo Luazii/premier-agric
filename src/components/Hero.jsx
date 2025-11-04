@@ -59,11 +59,11 @@ export default function Hero() {
           <div className="bg-white/90 backdrop-blur-md border border-green-100 rounded-2xl p-6 max-w-4xl mx-auto shadow-xl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
               <a
-                href="tel:+27 78 189 1615"
+                href="tel:+27 73 561 3851"
                 className="flex items-center justify-center space-x-3 text-gray-800 hover:text-green-600 transition-colors duration-300"
               >
                 <Phone className="w-5 h-5" />
-                <span className="font-semibold">+27 78 189 1615</span>
+                <span className="font-semibold">+27 73 561 3851</span>
               </a>
               <a
                 href="mailto:info@premieragric.co.za"
