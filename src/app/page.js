@@ -11,7 +11,7 @@ export default function Home() {
 
       <section className="py-6 border-t">
         <div className="max-w-6xl mx-auto px-6">
-          <h3 className="text-2xl font-semibold">Recent field work</h3>
+          
           <PortfolioGallery />
         </div>
       </section>

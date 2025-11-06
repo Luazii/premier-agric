@@ -58,7 +58,7 @@ export default function Hero() {
 
           {/* Quick Contact Bar */}
           <div className="bg-white/90 backdrop-blur-md border border-green-100 rounded-2xl p-6 max-w-4xl mx-auto shadow-xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div className="flex flex-col md:flex-row justify-around items-center gap-6">
               <a
                 href="tel:+27 73 561 3851"
                 className="flex items-center justify-center space-x-3 text-gray-800 hover:text-green-600 transition-colors duration-300"
@@ -73,13 +73,13 @@ export default function Hero() {
                 <Mail className="w-5 h-5" />
                 <span className="font-semibold">info@premieragric.co.za</span>
               </a>
-              <a
+              {/* <a
                 href="/contact"
                 className="flex items-center justify-center space-x-3 text-gray-800 hover:text-green-600 transition-colors duration-300"
               >
                 <MapPin className="w-5 h-5" />
                 <span className="font-semibold">Visit Our Offices</span>
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
