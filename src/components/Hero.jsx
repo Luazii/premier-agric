@@ -16,42 +16,43 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.3) 60%, rgba(255,255,255,0.8) 90%, white 100%)',
+            'linear-gradient(to bottom, rgba(0,0,0,0.7) 25%, rgba(0,0,0,0.4) 60%, rgba(255,255,255,0.8) 90%, white 100%)',
         }}
       />
-
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 mt-32">
         <div className="max-w-5xl mx-auto">
+          {/* Headline – Customer Benefit */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
-            <span className="text-white drop-shadow-md">Premier Agric</span>
-            <br />
-            {/* <span className="text-white drop-shadow-md">
-              Cultivating Growth, Nurturing Hope
-            </span> */}
+            <span className="text-white drop-shadow-md">
+              Grow Smarter. Farm Better. Earn More.
+            </span>
           </h1>
 
+          {/* Subheadline – Problem → Solution → Benefit */}
           <p className="text-lg md:text-xl lg:text-2xl font-medium text-white/90 mb-8 max-w-2xl mx-auto">
-            Sustainable agriculture • Drone & remote sensing • Data-driven insights — helping farmers make smarter, greener decisions.
+            Premier Agric helps farmers unlock higher yields, lower costs, and 
+            sustainable growth — using drone technology, precision mapping, and 
+            data-driven insights that work for every hectare.
           </p>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons – Now inquiry-focused */}
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
             <a
-              href="/services"
-              className="group px-8 py-4 bg-yellow-400 text-white text-lg font-medium rounded-xl shadow-lg hover:bg-green-700 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+              href="/contact"
+              className="group px-8 py-4 bg-[#FDE335] text-[#090B05] text-lg font-medium rounded-xl shadow-lg hover:bg-yellow-400 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
             >
-              Explore Services
+              Get a Free Consultation
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </a>
 
             <a
-              href="/portfolio"
-              className="group px-8 py-4  bg-[#688E3C] text-white text-lg font-medium rounded-xl shadow-lg hover:bg-lime-400 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+              href="/services"
+              className="group px-8 py-4 bg-[#688E3C] text-white text-lg font-medium rounded-xl shadow-lg hover:bg-green-700 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
             >
               <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-              See Our Work
+              Explore Solutions
             </a>
           </div>
 

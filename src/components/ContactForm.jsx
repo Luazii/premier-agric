@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, CheckCircle2 } from 'lucide-react'
+import { Send, CheckCircle2, Phone, Mail, MapPin } from 'lucide-react'
 
 export default function ContactForm() {
   const [sent, setSent] = useState(false)
@@ -14,7 +14,7 @@ export default function ContactForm() {
     const formData = new FormData(e.target)
 
     try {
-      const res = await fetch('https://formspree.io/f/xwpwoddq', { // 🔸 Replace with your actual Formspree ID
+      const res = await fetch('https://formspree.io/f/xwpwoddq', {
         method: 'POST',
         body: formData,
         headers: { Accept: 'application/json' },
@@ -41,26 +41,27 @@ export default function ContactForm() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="py-20 bg-gradient-to-b from-white to-green-50"
+      className="py-24 bg-gradient-to-b from-white to-green-50"
     >
       {/* Header */}
       <div className="max-w-3xl mx-auto text-center mb-12 px-6">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="text-4xl font-bold text-green-700 mb-4"
         >
-          Let’s Grow Together
+          Let’s Grow Something Great Together
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="text-gray-700 max-w-2xl mx-auto"
         >
-          Have a question, partnership idea, or want to work with us?  
-          Send us a message — we’d love to hear from you.
+          Whether you’re exploring drone solutions, training programs, or want to
+          start your next agribusiness project — tell us what you’re envisioning.
+          We’ll help you find the best path forward.
         </motion.p>
       </div>
 
@@ -68,36 +69,44 @@ export default function ContactForm() {
       <motion.form
         onSubmit={handleSubmit}
         method="POST"
-        className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-green-100"
+        className="max-w-2xl mx-auto bg-white p-10 rounded-2xl shadow-lg border border-green-100"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6 }}
         viewport={{ once: true }}
       >
+        {/* Hidden input to allow Formspree redirection */}
+        <input type="hidden" name="_subject" value="New Premier Agric Inquiry" />
+        <input type="hidden" name="_captcha" value="false" />
+
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Name Field */}
+          {/* Name */}
           <motion.div
             whileFocus={{ scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 200 }}
             className="text-left"
           >
-            <label className="block text-sm font-semibold text-green-700 mb-2">Full Name</label>
+            <label className="block text-sm font-semibold text-green-700 mb-2">
+              Full Name
+            </label>
             <input
               type="text"
               name="name"
               required
               className="w-full px-4 py-3 rounded-md border border-gray-200 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200"
-              placeholder="Enter your name"
+              placeholder="Enter your full name"
             />
           </motion.div>
 
-          {/* Email Field */}
+          {/* Email */}
           <motion.div
             whileFocus={{ scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 200 }}
             className="text-left"
           >
-            <label className="block text-sm font-semibold text-green-700 mb-2">Email Address</label>
+            <label className="block text-sm font-semibold text-green-700 mb-2">
+              Email Address
+            </label>
             <input
               type="email"
               name="email"
@@ -108,23 +117,25 @@ export default function ContactForm() {
           </motion.div>
         </div>
 
-        {/* Message Field */}
+        {/* Message */}
         <motion.div
           className="mt-6 text-left"
           whileFocus={{ scale: 1.01 }}
           transition={{ type: 'spring', stiffness: 150 }}
         >
-          <label className="block text-sm font-semibold text-green-700 mb-2">Message</label>
+          <label className="block text-sm font-semibold text-green-700 mb-2">
+            Tell us about your project or inquiry
+          </label>
           <textarea
             name="message"
             required
             rows="5"
             className="w-full px-4 py-3 rounded-md border border-gray-200 focus:ring-2 focus:ring-green-500 focus:outline-none resize-none transition-all duration-200"
-            placeholder="Type your message here..."
+            placeholder="Share your goals, challenges, or questions..."
           ></textarea>
         </motion.div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <div className="mt-8 flex items-center gap-4">
           <button
             type="submit"
@@ -138,12 +149,12 @@ export default function ContactForm() {
             {isSubmitting ? 'Sending...' : (
               <>
                 <Send className="w-4 h-4 mr-2" />
-                Send Message
+                Send Inquiry
               </>
             )}
           </button>
 
-          {/* Animated success message */}
+          {/* Animated Success */}
           <AnimatePresence>
             {sent && (
               <motion.div
@@ -160,6 +171,33 @@ export default function ContactForm() {
           </AnimatePresence>
         </div>
       </motion.form>
+
+      {/* Contact Info (Optional footer) */}
+      <div className="max-w-3xl mx-auto text-center mt-16 space-y-4 text-gray-700">
+        <p className="text-lg font-semibold text-green-700">
+          Prefer to reach us directly?
+        </p>
+        <div className="flex flex-col md:flex-row justify-center gap-4 text-sm">
+          <a
+            href="mailto:info@premieragric.co.za"
+            className="flex items-center justify-center gap-2 hover:text-green-600"
+          >
+            <Mail className="w-4 h-4" /> info@premieragric.co.za
+          </a>
+          <a
+            href="tel:+27735613851"
+            className="flex items-center justify-center gap-2 hover:text-green-600"
+          >
+            <Phone className="w-4 h-4" /> +27 73 561 3851
+          </a>
+          <a
+            href="/contact"
+            className="flex items-center justify-center gap-2 hover:text-green-600"
+          >
+            <MapPin className="w-4 h-4" /> Durban, South Africa
+          </a>
+        </div>
+      </div>
     </motion.section>
   )
 }

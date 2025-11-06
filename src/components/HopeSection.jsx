@@ -13,7 +13,7 @@ export default function HopeSection() {
           viewport={{ once: true }}
           className="text-3xl md:text-4xl font-bold text-green-800 font-display"
         >
-          Why Choose Us
+          Why Farmers Choose Premier Agric
         </motion.h2>
 
         <motion.p
@@ -23,12 +23,12 @@ export default function HopeSection() {
           viewport={{ once: true }}
           className="mt-6 text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto"
         >
-        
-At Premier Agric, we don’t just provide agricultural solutions, we walk beside you every step of the way. Your success is at 
- the heart of everything we do. By blending cutting-edge technology with sustainable, farmer-first 
- practices, we help you grow stronger, smarter, and more resilient. Every farm is unique, and so are our solutions. Which are designed to boost 
- productivity, lower costs, and nurture lasting growth. With Premier Agric, you’re not just farming, you’re building a sustainable future. we’re honored to be your partner on that journey.
-
+          At <span className="font-semibold text-green-700">Premier Agric</span>, we measure our success by what 
+          <strong>you achieve in the field</strong>.  
+          We don’t just deliver agricultural services — we provide the strategies, data, and on-the-ground 
+          guidance that turn your potential into real performance.  
+          Our approach blends technology with community, ensuring your farm isn’t just productive, 
+          but resilient, profitable, and sustainable — year after year.
         </motion.p>
 
         {/* PILLARS */}
@@ -36,15 +36,18 @@ At Premier Agric, we don’t just provide agricultural solutions, we walk beside
           {[
             {
               title: 'Dedicated Support',
-              text: 'Our team is here for you every step of the way, from planning to harvesting, ensuring your success.',
+              text: `We stay with you from planning to harvest — which means you never have to navigate 
+              challenges alone. Every decision is guided, every milestone supported.`,
             },
             {
               title: 'Proven Expertise',
-              text: 'With years of experience in agriculture, our team provides reliable guidance and support tailored to your needs.',
+              text: `With years of agricultural experience, we translate complex data and systems 
+              into simple, actionable steps that help you achieve measurable progress.`,
             },
             {
-              title: 'Cost-Effective Strategies',
-              text: 'We help you save on costs without compromising on quality, ensuring maximum return on investment.',
+              title: 'Cost-Effective Growth',
+              text: `Our strategies focus on reducing waste and optimizing inputs — 
+              which means higher yields, lower costs, and sustainable growth that lasts.`,
             },
           ].map((item, index) => (
             <motion.div
@@ -72,7 +75,7 @@ At Premier Agric, we don’t just provide agricultural solutions, we walk beside
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-bold font-display"
           >
-            Hope Grows Here
+            Hope Grows When You Do
           </motion.h2>
 
           <motion.p
@@ -82,9 +85,10 @@ At Premier Agric, we don’t just provide agricultural solutions, we walk beside
             viewport={{ once: true }}
             className="mt-6 max-w-3xl mx-auto text-lg text-white/90 leading-relaxed"
           >
-            Each consultation, each field visit, each training session, is a seed of
-            hope. Together, we can nurture a generation of farmers and agribusinesses
-            ready to feed nations and shape a greener future.
+            Every partnership begins with one goal — your progress.  
+            Each consultation, each training, and each field visit is designed to unlock new opportunities, 
+            strengthen your community, and ensure your work today builds a better tomorrow.  
+            Because when farmers grow, entire communities rise with them.
           </motion.p>
 
           <motion.div
@@ -98,7 +102,7 @@ At Premier Agric, we don’t just provide agricultural solutions, we walk beside
               href="/contact"
               className="inline-block bg-[#FDE335] text-[#1B3A1A] px-8 py-3 rounded-md font-semibold hover:bg-yellow-400 transition"
             >
-              Partner With Us
+              Start Your Growth Journey →
             </a>
           </motion.div>
         </div>
