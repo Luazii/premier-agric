@@ -15,12 +15,12 @@ export default function ServicesGrid() {
       and digital literacy skills — which means improved performance in the field and more sustainable long-term results.`,
       img: '/images/service-5.jpg',
     },
-    {
-      title: 'Precision Mapping & Data Insights',
-      body: `We use drone and satellite mapping to give you real-time insights into soil health, crop stress, and yield forecasts. 
-      This means you can plan smarter, save on inputs, and boost productivity while caring for the environment.`,
-      img: '/images/service-3.jpg',
-    },
+    // {
+    //   title: 'Precision Mapping & Data Insights',
+    //   body: `We use drone and satellite mapping to give you real-time insights into soil health, crop stress, and yield forecasts. 
+    //   This means you can plan smarter, save on inputs, and boost productivity while caring for the environment.`,
+    //   img: '/images/service-3.jpg',
+    // },
   ]
 
   return (
@@ -48,7 +48,7 @@ export default function ServicesGrid() {
       </motion.p>
 
       {/* Services Grid */}
-      <div className="grid md:grid-cols-3 gap-10 justify-center mt-16 max-w-6xl mx-auto">
+      <div className="flex md:grid-cols-3 gap-10 justify-center mt-16 max-w-6xl mx-auto">
         {services.map((s, i) => (
           <motion.article
             key={i}
