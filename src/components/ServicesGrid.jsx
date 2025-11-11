@@ -5,27 +5,32 @@ export default function ServicesGrid() {
   const services = [
     {
       title: 'Agribusiness Consulting',
-      body: `We help farmers and cooperatives design profitable business models that actually work in local conditions. 
-      This means you can access better markets, secure funding, and manage your operations more efficiently — with clarity and confidence.`,
+      body: `Strong operations start with a strong model. 
+      We help you design clear, profitable business systems that align with your environment, market, and mission — 
+      whether you manage a co-op, corporate impact programme, or commercial farm. 
+      Build capacity. Secure buyers. Strengthen your bottom line with purpose.`,
       img: '/images/service-6.jpg',
     },
     {
       title: 'Training & Capacity Building',
-      body: `Our hands-on training equips your team with the latest agricultural techniques, business management tools, 
-      and digital literacy skills — which means improved performance in the field and more sustainable long-term results.`,
+      body: `Transformation begins with people. 
+      We provide practical training that blends agricultural technique, digital literacy, and enterprise skills 
+      so your team can turn knowledge into real-world results. 
+      From youth programmes to professional extension, our approach ensures growth that lasts beyond the training room.`,
       img: '/images/service-5.jpg',
     },
-    // {
-    //   title: 'Precision Mapping & Data Insights',
-    //   body: `We use drone and satellite mapping to give you real-time insights into soil health, crop stress, and yield forecasts. 
-    //   This means you can plan smarter, save on inputs, and boost productivity while caring for the environment.`,
-    //   img: '/images/service-3.jpg',
-    // },
+    {
+      title: 'Sustainability & Impact Reporting',
+      body: `For partners who must prove measurable outcomes, we make it easy to show real impact. 
+      Our data systems track productivity gains, cost savings, youth employment, climate resilience, and community upliftment — 
+      giving you clear, credible evidence for reports and stakeholder communication.`,
+      img: '/images/service-4.jpg',
+    },
   ]
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-20">
-      {/* Title */}
+      {/* HEADER */}
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -36,19 +41,45 @@ export default function ServicesGrid() {
         Turning Agricultural Challenges into Measurable Growth
       </motion.h2>
 
+      {/* CONTEXT PARAGRAPH (Expanded Messaging) */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
         viewport={{ once: true }}
-        className="text-center text-gray-700 max-w-2xl mx-auto mt-4"
+        className="text-center text-gray-700 max-w-3xl mx-auto mt-6 leading-relaxed text-lg"
       >
-        Our services are built around one goal — helping you achieve real, visible progress in productivity,
-        profitability, and sustainability.
+        Farming today means navigating uncertainty — shifting rainfall patterns, unpredictable yields, rising input costs,
+        and markets that demand traceability and sustainability. You don’t need more complexity. You need clarity, control, 
+        and measurable progress.
       </motion.p>
 
-      {/* Services Grid */}
-      <div className="flex md:grid-cols-3 gap-10 justify-center mt-16 max-w-6xl mx-auto">
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.6 }}
+        viewport={{ once: true }}
+        className="text-center text-gray-700 max-w-3xl mx-auto mt-4 leading-relaxed text-lg"
+      >
+        We help you:
+        <br />• Optimise your inputs to protect margins.
+        <br />• Detect crop stress before it becomes a loss.
+        <br />• Strengthen business structures for long-term resilience.
+        <br />• Deliver impact that funders, clients, and communities can see.
+      </motion.p>
+
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.6 }}
+        viewport={{ once: true }}
+        className="text-center text-gray-700 max-w-3xl mx-auto mt-4 leading-relaxed text-lg"
+      >
+        Your growth story shouldn’t be defined by limitations — it should be measured in results.
+      </motion.p>
+
+      {/* SERVICES GRID */}
+      <div className="grid md:grid-cols-3 lg:grid-cols-3 gap-10 justify-center mt-16 max-w-6xl mx-auto">
         {services.map((s, i) => (
           <motion.article
             key={i}

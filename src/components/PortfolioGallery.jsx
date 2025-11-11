@@ -243,8 +243,9 @@ export default function PortfolioGallery() {
           Let’s Turn Possibility Into Progress
         </h2>
         <p className="max-w-2xl mx-auto text-white/90 mb-8">
-          Whether it’s precision farming, youth mentorship, or community
-          development — we help you transform ideas into measurable results.
+        Your goals deserve partners who can help you make measurable strides.
+        From precision farming to youth mentorship to community development, we’re ready to help you build what’s
+        next one data-driven, hands-on step at a time.
         </p>
         <a
           href="/contact"

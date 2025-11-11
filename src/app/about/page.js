@@ -31,13 +31,14 @@ export default function About() {
             transition={{ delay: 0.3 }}
             className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-white/90"
           >
-            Every field has potential — we help farmers unlock it through technology, training, and trust.
+            Every field holds potential — we help farmers unlock it through
+            innovation, data, and partnerships that drive measurable growth.
           </motion.p>
         </div>
       </section>
 
-      {/* OUR STORY */}
-      <section className="max-w-6xl mx-auto px-6 py-16 text-gray-700">
+      {/* WHY WE EXIST */}
+      <section className="max-w-6xl mx-auto px-6 py-20 text-gray-700">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,89 +46,126 @@ export default function About() {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-primary font-display">
-            Our Story: Growing with Purpose
+            Why We Exist
           </h2>
           <p className="mt-6 leading-relaxed text-lg">
-            Premier Agric began with a simple mission — to help farmers grow more efficiently and sustainably 
-            while improving their livelihoods. Established in 2020, we have worked alongside emerging farmers, 
-            cooperatives, and agripreneurs to transform challenges into opportunities for success.
+            Every agricultural project — from smallholder co-ops to corporate social 
+            investment portfolios — deserves more than generic solutions. You work hard 
+            to create livelihoods, build resilience, and deliver tangible outcomes, but 
+            fragmented systems, outdated training, and poor data visibility often hold 
+            back real progress.
           </p>
           <p className="mt-6 leading-relaxed text-lg">
-            Through modern technologies like drone mapping, soil analysis, and precision agriculture, 
-            we empower farmers to make informed decisions that increase yields, reduce input costs, 
-            and ensure environmental sustainability. But beyond data, our true impact is seen in the 
-            farmers who now farm with confidence — and communities that are becoming self-sufficient.
+            We exist to close that gap — delivering <span className="font-semibold text-green-700">
+            support that scales with you, data that strengthens your decisions, and training 
+            that transforms how you work.</span> Our mission is to make agriculture more connected, 
+            sustainable, and profitable — for the farmer and the community at large.
           </p>
         </motion.div>
+      </section>
 
-        {/* SECTION 1 */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-2xl font-semibold text-primary mb-3">Empowering the Modern Farmer</h3>
-            <p className="text-lg leading-relaxed">
-              We help smallholder and commercial farmers adopt innovative methods — 
-              from crop monitoring using drones to real-time data analytics. This means better 
-              planning, improved productivity, and long-term cost savings for our clients.
-            </p>
-            <p className="mt-4 text-lg leading-relaxed">
-              Farmers who partner with us don’t just grow crops — they grow capacity, confidence, 
-              and profitability.
-            </p>
-          </motion.div>
+      {/* OUR STORY */}
+      <section className="bg-green-50 py-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <Image
+                src="/images/portfolio-2.jpg"
+                alt="Empowered farmer"
+                width={600}
+                height={400}
+                className="rounded-2xl shadow-lg object-cover"
+              />
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <Image
-              src="/images/service-3.jpg"
-              alt="Empowered farmer"
-              width={600}
-              height={400}
-              className="rounded-2xl shadow-lg object-cover"
-            />
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-primary font-display mb-4">
+                Our Story: Growing with Purpose
+              </h2>
+              <p className="text-lg leading-relaxed">
+                Premier Agric was founded in 2020 with one belief — that agricultural transformation 
+                begins with people. We’ve worked alongside emerging farmers, cooperatives, and 
+                agripreneurs to turn challenges into scalable, sustainable solutions.
+              </p>
+              <p className="mt-4 text-lg leading-relaxed">
+                Through precision agriculture, mentorship, and hands-on implementation, 
+                we help our partners not just grow crops, but grow capacity and confidence. 
+                Our impact is seen in farms that now run efficiently, youth that find meaningful 
+                work, and communities that are becoming self-sufficient.
+              </p>
+            </motion.div>
+          </div>
         </div>
+      </section>
 
-        {/* SECTION 2 */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      {/* OUR APPROACH */}
+      <section className="max-w-6xl mx-auto px-6 py-20 text-gray-700">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-bold text-primary font-display mb-8 text-center"
+        >
+          Our Approach: Practical Innovation with Measurable Impact
+        </motion.h2>
+
+        <div className="grid md:grid-cols-2 gap-10">
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Image
-              src="/images/portfolio-2.jpg"
-              alt="Working with communities"
-              width={600}
-              height={400}
-              className="rounded-2xl shadow-lg object-cover"
-            />
+            <h3 className="text-2xl font-semibold text-green-700 mb-3">
+              Precision Mapping & Data Insights
+            </h3>
+            <p className="text-lg leading-relaxed mb-6">
+              See your operation clearly. Identify crop stress, irrigation inefficiencies, and yield potential 
+              before they affect results — using drone mapping, satellite data, and spatial analytics.
+            </p>
+
+            <h3 className="text-2xl font-semibold text-green-700 mb-3">
+              Business Model Design & Enterprise Development
+            </h3>
+            <p className="text-lg leading-relaxed mb-6">
+              Move from vision to profitability. We help you design scalable, viable business models that 
+              align people, processes, and performance for long-term success.
+            </p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-2xl font-semibold text-primary mb-3">Building Sustainable Communities</h3>
-            <p className="text-lg leading-relaxed">
-              Our work goes beyond individual success — we focus on building lasting agricultural ecosystems. 
-              By training youth, mentoring cooperatives, and supporting rural farmers, we’re helping entire 
-              communities to thrive independently.
+            <h3 className="text-2xl font-semibold text-green-700 mb-3">
+              Hands-On Training & Capacity Building
+            </h3>
+            <p className="text-lg leading-relaxed mb-6">
+              Equip your teams — from farmers and youth to field staff — with practical skills 
+              that boost confidence, efficiency, and output. Our programs bridge knowledge gaps 
+              with real-world experience.
             </p>
-            <p className="mt-4 text-lg leading-relaxed">
-              Because when one farmer succeeds, the whole community grows stronger. 
-              That’s the transformation we stand for.
+
+            <h3 className="text-2xl font-semibold text-green-700 mb-3">
+              End-to-End Support
+            </h3>
+            <p className="text-lg leading-relaxed">
+              From concept and design through monitoring, evaluation, and scaling — we walk 
+              with you every step of the way. Because transformation doesn’t end at strategy; 
+              it thrives through partnership.
             </p>
           </motion.div>
         </div>
@@ -142,7 +180,7 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="text-3xl md:text-4xl font-bold font-display"
           >
-            Let’s Grow Your Farm — and Your Future
+            Let’s Build the Future of Agriculture — Together
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -150,8 +188,9 @@ export default function About() {
             transition={{ delay: 0.3 }}
             className="mt-6 text-lg text-white/90 max-w-2xl mx-auto"
           >
-            Whether you’re starting your first project or scaling your agribusiness, Premier Agric is ready 
-            to partner with you. Let’s turn your agricultural vision into measurable growth.
+            Whether you’re exploring precision farming, training programs, or enterprise 
+            development, Premier Agric is ready to help you turn your agricultural goals 
+            into measurable results.
           </motion.p>
           <div className="mt-8">
             <a

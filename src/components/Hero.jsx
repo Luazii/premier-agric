@@ -26,15 +26,16 @@ export default function Hero() {
           {/* Headline – Customer Benefit */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
             <span className="text-white drop-shadow-md">
-              Grow Smarter. Farm Better. Earn More.
+             Grow Smarter. Farm Better. Earn More.
             </span>
           </h1>
 
           {/* Subheadline – Problem → Solution → Benefit */}
           <p className="text-lg md:text-xl lg:text-2xl font-medium text-white/90 mb-8 max-w-2xl mx-auto">
-            Premier Agric helps farmers unlock higher yields, lower costs, and 
-            sustainable growth — using drone technology, precision mapping, and 
-            data-driven insights that work for every hectare.
+          You’ve built your vision on the land now it’s time to see it thrive. At Premier Agric, we help you turn insight into action, combining drone-driven
+          mapping, precision data and locally adapted support to help your project grow stronger roots. Whether you’re building a community enterprise, managing a commercial operation or 
+          leading a development initiative, your success deserves tools that perform in the real world.
+
           </p>
 
           {/* CTA Buttons – Now inquiry-focused */}
