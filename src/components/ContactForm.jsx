@@ -51,7 +51,7 @@ export default function ContactForm() {
           transition={{ delay: 0.2 }}
           className="text-4xl font-bold text-green-700 mb-4"
         >
-          Let’s Grow Something Great Together
+          Tell Us What You Need Help With
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -59,9 +59,7 @@ export default function ContactForm() {
           transition={{ delay: 0.4 }}
           className="text-gray-700 max-w-2xl mx-auto"
         >
-          Whether you’re exploring drone solutions, training programs, or want to
-          start your next agribusiness project — tell us what you’re envisioning.
-          We’ll help you find the best path forward.
+          Answer these quick questions so we can match you with the right support.
         </motion.p>
       </div>
 
@@ -117,6 +115,23 @@ export default function ContactForm() {
           </motion.div>
         </div>
 
+        <div className="mt-6 text-left">
+          <label className="block text-sm font-semibold text-green-700 mb-2">
+            What is your primary challenge?
+          </label>
+          <select
+            name="challenge"
+            className="w-full px-4 py-3 rounded-md border border-gray-200 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200 bg-white"
+          >
+            <option>Improving crop yields</option>
+            <option>Reducing input costs</option>
+            <option>Drone mapping & insights</option>
+            <option>Training & youth development</option>
+            <option>Impact reporting for funders</option>
+            <option>Other / General Inquiry</option>
+          </select>
+        </div>
+
         {/* Message */}
         <motion.div
           className="mt-6 text-left"
@@ -140,11 +155,10 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`inline-flex items-center justify-center font-semibold px-6 py-3 rounded-md shadow-md transition-all duration-300 ${
-              isSubmitting
-                ? 'bg-green-300 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700 text-white'
-            }`}
+            className={`inline-flex items-center justify-center font-semibold px-6 py-3 rounded-md shadow-md transition-all duration-300 ${isSubmitting
+              ? 'bg-green-300 cursor-not-allowed'
+              : 'bg-green-600 hover:bg-green-700 text-white'
+              }`}
           >
             {isSubmitting ? 'Sending...' : (
               <>

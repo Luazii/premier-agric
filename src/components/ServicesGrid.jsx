@@ -6,24 +6,22 @@ export default function ServicesGrid() {
     {
       title: 'Agribusiness Consulting',
       body: `Strong operations start with a strong model. 
-      We help you design clear, profitable business systems that align with your environment, market, and mission — 
-      whether you manage a co-op, corporate impact programme, or commercial farm. 
-      Build capacity. Secure buyers. Strengthen your bottom line with purpose.`,
+      We help you design clear, profitable business systems — 
+      which means you can secure buyers, reduce waste, and scale with confidence.`,
       img: '/images/service-6.jpg',
     },
     {
       title: 'Training & Capacity Building',
       body: `Transformation begins with people. 
-      We provide practical training that blends agricultural technique, digital literacy, and enterprise skills 
-      so your team can turn knowledge into real-world results. 
-      From youth programmes to professional extension, our approach ensures growth that lasts beyond the training room.`,
+      We provide practical training in agricultural technique and business skills — 
+      which means your team gains the confidence to solve problems and drive daily productivity without constant supervision.`,
       img: '/images/service-5.jpg',
     },
     {
       title: 'Sustainability & Impact Reporting',
-      body: `For partners who must prove measurable outcomes, we make it easy to show real impact. 
-      Our data systems track productivity gains, cost savings, youth employment, climate resilience, and community upliftment — 
-      giving you clear, credible evidence for reports and stakeholder communication.`,
+      body: `For partners who must prove value. 
+      We track real-world data on yields, jobs created, and climate resilience — 
+      which means you get credible, audit-ready reports that validate your investment and attract future funding.`,
       img: '/images/service-4.jpg',
     },
   ]
@@ -50,7 +48,7 @@ export default function ServicesGrid() {
         className="text-center text-gray-700 max-w-3xl mx-auto mt-6 leading-relaxed text-lg"
       >
         Farming today means navigating uncertainty — shifting rainfall patterns, unpredictable yields, rising input costs,
-        and markets that demand traceability and sustainability. You don’t need more complexity. You need clarity, control, 
+        and markets that demand traceability and sustainability. You don’t need more complexity. You need clarity, control,
         and measurable progress.
       </motion.p>
 

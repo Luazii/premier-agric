@@ -26,16 +26,15 @@ export default function Hero() {
           {/* Headline – Customer Benefit */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
             <span className="text-white drop-shadow-md">
-             Grow Smarter. Farm Better. Earn More.
+              Grow Smarter. Farm Better. Earn More.
             </span>
           </h1>
 
           {/* Subheadline – Problem → Solution → Benefit */}
-          <p className="text-lg md:text-xl lg:text-2xl font-medium text-white/90 mb-8 max-w-2xl mx-auto">
-          You’ve built your vision on the land now it’s time to see it thrive. At Premier Agric, we help you turn insight into action, combining drone-driven
-          mapping, precision data and locally adapted support to help your project grow stronger roots. Whether you’re building a community enterprise, managing a commercial operation or 
-          leading a development initiative, your success deserves tools that perform in the real world.
-
+          <p className="text-lg md:text-xl lg:text-2xl font-medium text-white/90 mb-8 max-w-3xl mx-auto">
+            Are rising input costs, unpredictable yields, or climate pressure making farming harder each season?
+            <br />
+            We help farmers and partners turn uncertainty into measurable growth.
           </p>
 
           {/* CTA Buttons – Now inquiry-focused */}
@@ -44,8 +43,7 @@ export default function Hero() {
               href="/contact"
               className="group px-8 py-4 bg-[#FDE335] text-[#090B05] text-lg font-medium rounded-xl shadow-lg hover:bg-yellow-400 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
             >
-              Get a Free Consultation
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              Answer 3 Quick Questions →
             </a>
 
             <a

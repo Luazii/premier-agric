@@ -14,10 +14,9 @@ export default function PortfolioGallery() {
       type: 'image',
       category: 'projects',
       title: 'Community Farm Projects',
-      description:
-        'Challenge: Rural farmers lacked access to reliable water and productivity systems. \
-        Solution: We designed sustainable irrigation and cooperative mentorship programs. \
-        Result: Over 40 families improved yields by 30% in one season.',
+      description: `Challenge: Rural farmers lacked access to reliable water and productivity systems.
+Solution: We designed sustainable irrigation and cooperative mentorship programs.
+Result: Over 40 families improved yields by 30% in one season.`,
       image: '/images/portfolio-1.jpg',
       tags: ['Empowerment', 'Irrigation', 'Mentorship'],
     },
@@ -26,10 +25,9 @@ export default function PortfolioGallery() {
       type: 'image',
       category: 'projects',
       title: 'Smart Farming',
-      description:
-        'Challenge: Farmers struggled to detect crop stress early. \
-        Solution: Using precision drone mapping, we identified nutrient gaps and irrigation issues. \
-        Result: Early intervention reduced input waste by 18% and boosted yield quality.',
+      description: `Challenge: Farmers struggled to detect crop stress early.
+Solution: Using precision drone mapping, we identified nutrient gaps and irrigation issues.
+Result: Early intervention reduced input waste by 18% and boosted yield quality.`,
       image: '/images/portfolio-4.jpg',
       tags: ['Drone', 'Innovation', 'Precision Mapping'],
     },
@@ -38,10 +36,9 @@ export default function PortfolioGallery() {
       type: 'image',
       category: 'projects',
       title: 'Youth in Agriculture Initiative',
-      description:
-        'Challenge: Many graduates lacked practical pathways into agriculture. \
-        Solution: Premier Agric launched a youth mentorship program focused on agribusiness innovation. \
-        Result: 120+ youth trained, 12 startups launched, and community impact expanding yearly.',
+      description: `Challenge: Many graduates lacked practical pathways into agriculture.
+Solution: Premier Agric launched a youth mentorship program focused on agribusiness innovation.
+Result: 120+ youth trained, 12 startups launched, and community impact expanding yearly.`,
       image: '/images/pexels-gary-barnes-6231693.jpg',
       tags: ['Youth', 'Training', 'Innovation'],
     },
@@ -128,11 +125,10 @@ export default function PortfolioGallery() {
             <button
               key={c.id}
               onClick={() => setActiveTab(c.id)}
-              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                activeTab === c.id
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${activeTab === c.id
                   ? 'bg-green-600 text-white shadow-lg'
                   : 'bg-white border border-gray-300 text-gray-700 hover:bg-green-50'
-              }`}
+                }`}
             >
               {c.name}
             </button>
@@ -221,7 +217,9 @@ export default function PortfolioGallery() {
               <h3 className="text-xl font-bold mb-2 text-green-700">
                 {selectedMedia.title}
               </h3>
-              <p className="text-gray-600 mb-4">{selectedMedia.description}</p>
+              <div className="text-gray-600 mb-4 whitespace-pre-line leading-relaxed">
+                {selectedMedia.description}
+              </div>
               <div className="flex flex-wrap gap-2">
                 {selectedMedia.tags?.map((tag, index) => (
                   <span
@@ -243,9 +241,9 @@ export default function PortfolioGallery() {
           Let’s Turn Possibility Into Progress
         </h2>
         <p className="max-w-2xl mx-auto text-white/90 mb-8">
-        Your goals deserve partners who can help you make measurable strides.
-        From precision farming to youth mentorship to community development, we’re ready to help you build what’s
-        next one data-driven, hands-on step at a time.
+          Your goals deserve partners who can help you make measurable strides.
+          From precision farming to youth mentorship to community development, we’re ready to help you build what’s
+          next one data-driven, hands-on step at a time.
         </p>
         <a
           href="/contact"

@@ -49,16 +49,16 @@ export default function About() {
             Why We Exist
           </h2>
           <p className="mt-6 leading-relaxed text-lg">
-            Every agricultural project — from smallholder co-ops to corporate social 
-            investment portfolios — deserves more than generic solutions. You work hard 
-            to create livelihoods, build resilience, and deliver tangible outcomes, but 
-            fragmented systems, outdated training, and poor data visibility often hold 
+            Every agricultural project — from smallholder co-ops to corporate social
+            investment portfolios — deserves more than generic solutions. You work hard
+            to create livelihoods, build resilience, and deliver tangible outcomes, but
+            fragmented systems, outdated training, and poor data visibility often hold
             back real progress.
           </p>
           <p className="mt-6 leading-relaxed text-lg">
             We exist to close that gap — delivering <span className="font-semibold text-green-700">
-            support that scales with you, data that strengthens your decisions, and training 
-            that transforms how you work.</span> Our mission is to make agriculture more connected, 
+              support that scales with you, data that strengthens your decisions, and training
+              that transforms how you work.</span> Our mission is to make agriculture more connected,
             sustainable, and profitable — for the farmer and the community at large.
           </p>
         </motion.div>
@@ -93,14 +93,14 @@ export default function About() {
                 Our Story: Growing with Purpose
               </h2>
               <p className="text-lg leading-relaxed">
-                Premier Agric was founded in 2020 with one belief — that agricultural transformation 
-                begins with people. We’ve worked alongside emerging farmers, cooperatives, and 
+                Premier Agric was founded in 2020 with one belief — that agricultural transformation
+                begins with people. We’ve worked alongside emerging farmers, cooperatives, and
                 agripreneurs to turn challenges into scalable, sustainable solutions.
               </p>
               <p className="mt-4 text-lg leading-relaxed">
-                Through precision agriculture, mentorship, and hands-on implementation, 
-                we help our partners not just grow crops, but grow capacity and confidence. 
-                Our impact is seen in farms that now run efficiently, youth that find meaningful 
+                Through precision agriculture, mentorship, and hands-on implementation,
+                we help our partners not just grow crops, but grow capacity and confidence.
+                Our impact is seen in farms that now run efficiently, youth that find meaningful
                 work, and communities that are becoming self-sufficient.
               </p>
             </motion.div>
@@ -131,7 +131,7 @@ export default function About() {
               Precision Mapping & Data Insights
             </h3>
             <p className="text-lg leading-relaxed mb-6">
-              See your operation clearly. Identify crop stress, irrigation inefficiencies, and yield potential 
+              See your operation clearly. Identify crop stress, irrigation inefficiencies, and yield potential
               before they affect results — using drone mapping, satellite data, and spatial analytics.
             </p>
 
@@ -139,7 +139,7 @@ export default function About() {
               Business Model Design & Enterprise Development
             </h3>
             <p className="text-lg leading-relaxed mb-6">
-              Move from vision to profitability. We help you design scalable, viable business models that 
+              Move from vision to profitability. We help you design scalable, viable business models that
               align people, processes, and performance for long-term success.
             </p>
           </motion.div>
@@ -154,8 +154,8 @@ export default function About() {
               Hands-On Training & Capacity Building
             </h3>
             <p className="text-lg leading-relaxed mb-6">
-              Equip your teams — from farmers and youth to field staff — with practical skills 
-              that boost confidence, efficiency, and output. Our programs bridge knowledge gaps 
+              Equip your teams — from farmers and youth to field staff — with practical skills
+              that boost confidence, efficiency, and output. Our programs bridge knowledge gaps
               with real-world experience.
             </p>
 
@@ -163,16 +163,36 @@ export default function About() {
               End-to-End Support
             </h3>
             <p className="text-lg leading-relaxed">
-              From concept and design through monitoring, evaluation, and scaling — we walk 
-              with you every step of the way. Because transformation doesn’t end at strategy; 
+              From concept and design through monitoring, evaluation, and scaling — we walk
+              with you every step of the way. Because transformation doesn’t end at strategy;
               it thrives through partnership.
             </p>
           </motion.div>
         </div>
       </section>
 
+      {/* SPONSOR HOOK */}
+      <section className="bg-white py-20 border-t border-gray-100">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h3 className="text-2xl md:text-3xl font-semibold text-primary font-display">
+            Are You a Foundation or Sponsor Seeking Measurable Rural Impact?
+          </h3>
+
+          <p className="mt-4 text-lg text-gray-700 leading-relaxed">
+            We help partners deliver credible outcomes — youth employment, food security,
+            climate resilience, and sustainable livelihoods backed by real data.
+          </p>
+
+          <div className="mt-8">
+            <a href="/contact" className="text-green-700 font-bold text-lg underline hover:text-green-800 transition">
+              Let’s discuss an impact programme →
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* CTA SECTION */}
-      <section className="bg-primary text-white py-20 mt-12">
+      <section className="bg-primary text-white py-20 mt-0">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -188,8 +208,8 @@ export default function About() {
             transition={{ delay: 0.3 }}
             className="mt-6 text-lg text-white/90 max-w-2xl mx-auto"
           >
-            Whether you’re exploring precision farming, training programs, or enterprise 
-            development, Premier Agric is ready to help you turn your agricultural goals 
+            Whether you’re exploring precision farming, training programs, or enterprise
+            development, Premier Agric is ready to help you turn your agricultural goals
             into measurable results.
           </motion.p>
           <div className="mt-8">
