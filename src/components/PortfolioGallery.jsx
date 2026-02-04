@@ -8,39 +8,61 @@ export default function PortfolioGallery() {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const galleryItems = [
-    // Case Study–style Projects
+    // News Letters linked to LinkedIn
     {
       id: 1,
-      type: 'image',
-      category: 'projects',
-      title: 'Community Farm Projects',
-      description: `Challenge: Rural farmers lacked access to reliable water and productivity systems.
-Solution: We designed sustainable irrigation and cooperative mentorship programs.
-Result: Over 40 families improved yields by 30% in one season.`,
-      image: '/images/portfolio-1.jpg',
-      tags: ['Empowerment', 'Irrigation', 'Mentorship'],
+      type: 'social',
+      platform: 'LinkedIn',
+      category: 'newsletters',
+      title: 'Real Strength Lies in Choosing Peace Over Activity',
+      description: 'Discover how choosing peace can be a source of strength in the agricultural sector.',
+      image: '/images/youthempowermentcamp_page-0001.jpg',
+      embed: 'https://www.linkedin.com/posts/premier-agric_real-strength-lies-in-choosing-peace-over-activity-7353065167577919488-IxjX?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
+      tags: ['Leadership', 'Mental Health'],
     },
     {
       id: 2,
-      type: 'image',
-      category: 'projects',
-      title: 'Smart Farming',
-      description: `Challenge: Farmers struggled to detect crop stress early.
-Solution: Using precision drone mapping, we identified nutrient gaps and irrigation issues.
-Result: Early intervention reduced input waste by 18% and boosted yield quality.`,
-      image: '/images/portfolio-4.jpg',
-      tags: ['Drone', 'Innovation', 'Precision Mapping'],
+      type: 'social',
+      platform: 'LinkedIn',
+      category: 'newsletters',
+      title: 'Meet Njabulo Mthembu from Shazini Farm',
+      description: 'Highlighting the journey and achievements of Njabulo Mthembu at Shazini Farm.',
+      image: '/images/Meet Njabulo Mthembu from Shazini Farm.png',
+      embed: 'https://www.linkedin.com/posts/premier-agric_meet-njabulo-mthembu-from-shazini-farm-activity-7376229217052749824-Rf1r?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
+      tags: ['Community', 'Farming Success'],
     },
     {
       id: 3,
-      type: 'image',
-      category: 'projects',
-      title: 'Youth in Agriculture Initiative',
-      description: `Challenge: Many graduates lacked practical pathways into agriculture.
-Solution: Premier Agric launched a youth mentorship program focused on agribusiness innovation.
-Result: 120+ youth trained, 12 startups launched, and community impact expanding yearly.`,
-      image: '/images/pexels-gary-barnes-6231693.jpg',
-      tags: ['Youth', 'Training', 'Innovation'],
+      type: 'social',
+      platform: 'LinkedIn',
+      category: 'newsletters',
+      title: 'The Irish Tech Challenge South Africa',
+      description: 'Insights from the Irish Tech Challenge and its impact on South African agriculture.',
+      image: '/images/irishtechchallenge.jpeg',
+      embed: 'https://www.linkedin.com/posts/premier-agric_the-irish-tech-challenge-south-africa-was-activity-7399401576022532097-qvnR?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
+      tags: ['Tech', 'Innovation', 'Global Partnerships'],
+    },
+    {
+      id: 6,
+      type: 'social',
+      platform: 'LinkedIn',
+      category: 'newsletters',
+      title: 'Are We Creating a Digital Apartheid?',
+      description: 'A critical look at the digital divide in modern agriculture.',
+      image: '/images/digitalapartheid.jpeg',
+      embed: 'https://www.linkedin.com/posts/premier-agric_are-we-creating-a-digital-apartheid-in-activity-7422945423981445120-Rl_I?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
+      tags: ['Digital Divide', 'Ethics', 'Technology'],
+    },
+    {
+      id: 7,
+      type: 'social',
+      platform: 'LinkedIn',
+      category: 'newsletters',
+      title: 'We Have the Tech But Do We Have the Troops?',
+      description: 'Discussing the human capital needed to drive agricultural technology forward.',
+      image: '/images/troops.jpeg',
+      embed: 'https://www.linkedin.com/posts/premier-agric_we-have-the-tech-but-do-we-have-the-troops-activity-7424379922669998080-1UQB?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
+      tags: ['Skills Gap', 'Workforce', 'Future of Work'],
     },
 
     // Social Media Highlights
@@ -73,7 +95,7 @@ Result: 120+ youth trained, 12 startups launched, and community impact expanding
 
   const categories = [
     { id: 'all', name: 'All Items' },
-    { id: 'projects', name: 'Case Studies' },
+    { id: 'newsletters', name: 'News Letters' },
     { id: 'social', name: 'Social Media' },
   ]
 
@@ -126,8 +148,8 @@ Result: 120+ youth trained, 12 startups launched, and community impact expanding
               key={c.id}
               onClick={() => setActiveTab(c.id)}
               className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${activeTab === c.id
-                  ? 'bg-green-600 text-white shadow-lg'
-                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-green-50'
+                ? 'bg-green-600 text-white shadow-lg'
+                : 'bg-white border border-gray-300 text-gray-700 hover:bg-green-50'
                 }`}
             >
               {c.name}

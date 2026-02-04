@@ -8,6 +8,7 @@ export const metadata = {
   description:
     'Premier Agric delivers sustainable agriculture solutions, precision drone mapping, mentorship, and data-driven farming services across Africa.',
   keywords: [
+    
     'Farmer training',
     'agricultural business plan',
     'agricultural training',
