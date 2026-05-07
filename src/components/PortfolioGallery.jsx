@@ -91,6 +91,18 @@ export default function PortfolioGallery() {
       embed: 'https://www.facebook.com/share/v/1CmGR2LjbX/',
       tags: ['Technology', 'Climate-smart', 'Innovation'],
     },
+    {
+      id: 8,
+      type: 'social',
+      platform: 'Website',
+      category: 'social',
+      title: 'Badger Analytics – The Future of Precision Farming',
+      description:
+        'A flagship innovation by Premier Agric, Badger Analytics is more than just data—it’s the pulse of your farm. Designed to transform complex agricultural metrics into actionable intelligence, this solution empowers farmers to make high-stakes decisions with absolute confidence.',
+      image: '/images/badger logo.png',
+      embed: 'https://badgeranalytics.co.za',
+      tags: ['Premier Agric Innovation', 'Data Science', 'High Impact'],
+    },
   ]
 
   const categories = [

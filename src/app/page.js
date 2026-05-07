@@ -1,4 +1,5 @@
 import Hero from '../components/Hero';
+import LogosMarquee from '../components/LogosMarquee';
 import ServicesGrid from '../components/ServicesGrid';
 import PortfolioGallery from '../components/PortfolioGallery';
 import EngagementPrompt from '../components/EngagementPrompt';
@@ -8,6 +9,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <LogosMarquee />
       <ServicesGrid />
       <EngagementPrompt />
 

@@ -17,7 +17,17 @@ module.exports = {
         sans: ["Roboto", "Segoe UI", "system-ui", "sans-serif"],
         display: ["'Exo 2'", "Roboto", "sans-serif"],
       },
+      animation: {
+        scroll: 'scroll 60s linear infinite',
+      },
+      keyframes: {
+        scroll: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
     },
   },
+
   plugins: [],
 }
