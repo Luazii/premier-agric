@@ -1,11 +1,10 @@
 'use client'
+
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Send, CheckCircle2, Phone, Mail, MapPin } from 'lucide-react'
 
 export default function ContactForm() {
-  const [sent, setSent] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [sent, setSent] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -23,195 +22,86 @@ export default function ContactForm() {
       if (res.ok) {
         setSent(true)
         e.target.reset()
-        setTimeout(() => setSent(false), 4000)
-      } else {
-        alert('Something went wrong. Please try again.')
       }
-    } catch (err) {
-      console.error(err)
-      alert('Network error. Please check your connection.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-      className="py-24 bg-gradient-to-b from-white to-green-50"
-    >
-      {/* Header */}
-      <div className="max-w-3xl mx-auto text-center mb-12 px-6">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-4xl font-bold text-green-700 mb-4"
-        >
-          Tell Us What You Need Help With
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-gray-700 max-w-2xl mx-auto"
-        >
-          Answer these quick questions so we can match you with the right support.
-        </motion.p>
-      </div>
+    <main className="min-h-screen bg-[var(--surface)] pt-32">
+      <div className="mx-auto max-w-7xl px-6 pb-32 md:px-8">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+          <div className="flex flex-col justify-between pt-12 md:col-span-5 md:pt-24">
+            <div className="mb-16">
+              <span className="eyebrow mb-4 block">Connect</span>
+              <h1 className="section-title text-[var(--forest)]">Let&apos;s cultivate excellence.</h1>
+              <p className="mt-6 max-w-md text-xl leading-8 text-[var(--ink-muted)]">
+                Whether you&apos;re looking to optimise operations or explore sustainable innovation, our advisors are ready to partner with you.
+              </p>
+            </div>
+            <div className="space-y-8 border-l border-[var(--line)] pl-6">
+              <div>
+                <h3 className="eyebrow mb-2 text-[var(--ink-muted)]">Headquarters</h3>
+                <p className="text-lg text-[var(--forest)]">Durban, KZN<br />South Africa</p>
+              </div>
+              <div>
+                <h3 className="eyebrow mb-2 text-[var(--ink-muted)]">Direct line</h3>
+                <a href="tel:+27735613851" className="font-display text-3xl text-[var(--forest)] hover:text-[var(--clay)]">+27 73 561 3851</a>
+              </div>
+              <div>
+                <h3 className="eyebrow mb-2 text-[var(--ink-muted)]">Electronic mail</h3>
+                <a href="mailto:info@premieragric.co.za" className="border-b border-[var(--clay)]/40 pb-1 text-xl text-[var(--forest)] hover:text-[var(--clay)]">info@premieragric.co.za</a>
+              </div>
+            </div>
+          </div>
 
-      {/* Contact Form */}
-      <motion.form
-        onSubmit={handleSubmit}
-        method="POST"
-        className="max-w-2xl mx-auto bg-white p-10 rounded-2xl shadow-lg border border-green-100"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        {/* Hidden input to allow Formspree redirection */}
-        <input type="hidden" name="_subject" value="New Premier Agric Inquiry" />
-        <input type="hidden" name="_captcha" value="false" />
+          <div className="md:col-span-6 md:col-start-7">
+            <div className="relative border border-[var(--line)] bg-white p-8 shadow-sm md:p-12">
+              <div className="absolute left-0 top-0 h-[2px] w-full bg-[var(--clay)]" />
+              <div className="mb-10">
+                <h2 className="font-display text-5xl text-[var(--forest)]">Answer 3 Quick Questions</h2>
+                <p className="mt-2 text-[var(--ink-muted)]">To help us route your inquiry to the right specialist.</p>
+              </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Name */}
-          <motion.div
-            whileFocus={{ scale: 1.02 }}
-            transition={{ type: 'spring', stiffness: 200 }}
-            className="text-left"
-          >
-            <label className="block text-sm font-semibold text-green-700 mb-2">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              required
-              className="w-full px-4 py-3 rounded-md border border-gray-200 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200"
-              placeholder="Enter your full name"
-            />
-          </motion.div>
+              <form className="space-y-10" onSubmit={handleSubmit}>
+                <input type="hidden" name="_subject" value="New Premier Agric Inquiry" />
+                <input type="hidden" name="_captcha" value="false" />
 
-          {/* Email */}
-          <motion.div
-            whileFocus={{ scale: 1.02 }}
-            transition={{ type: 'spring', stiffness: 200 }}
-            className="text-left"
-          >
-            <label className="block text-sm font-semibold text-green-700 mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              required
-              className="w-full px-4 py-3 rounded-md border border-gray-200 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200"
-              placeholder="you@example.com"
-            />
-          </motion.div>
-        </div>
+                <div>
+                  <label className="eyebrow mb-2 block text-[var(--forest)]">01. What is the nature of your inquiry?</label>
+                  <select name="challenge" className="underline-input text-lg text-[var(--forest)]">
+                    <option>Strategic Consulting</option>
+                    <option>Sustainability Solutions</option>
+                    <option>Portfolio Management</option>
+                    <option>General Inquiry</option>
+                  </select>
+                </div>
 
-        <div className="mt-6 text-left">
-          <label className="block text-sm font-semibold text-green-700 mb-2">
-            What is your primary challenge?
-          </label>
-          <select
-            name="challenge"
-            className="w-full px-4 py-3 rounded-md border border-gray-200 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200 bg-white"
-          >
-            <option>Improving crop yields</option>
-            <option>Reducing input costs</option>
-            <option>Drone mapping & insights</option>
-            <option>Training & youth development</option>
-            <option>Impact reporting for funders</option>
-            <option>Other / General Inquiry</option>
-          </select>
-        </div>
+                <div>
+                  <label className="eyebrow mb-2 block text-[var(--forest)]">02. Briefly describe your project scale or current challenge.</label>
+                  <textarea name="message" rows="3" className="underline-input text-lg text-[var(--forest)]" placeholder="E.g. 500-hectare commercial farm seeking yield optimisation..." required />
+                </div>
 
-        {/* Message */}
-        <motion.div
-          className="mt-6 text-left"
-          whileFocus={{ scale: 1.01 }}
-          transition={{ type: 'spring', stiffness: 150 }}
-        >
-          <label className="block text-sm font-semibold text-green-700 mb-2">
-            Tell us about your project or inquiry
-          </label>
-          <textarea
-            name="message"
-            required
-            rows="5"
-            className="w-full px-4 py-3 rounded-md border border-gray-200 focus:ring-2 focus:ring-green-500 focus:outline-none resize-none transition-all duration-200"
-            placeholder="Share your goals, challenges, or questions..."
-          ></textarea>
-        </motion.div>
+                <div>
+                  <label className="eyebrow mb-6 block text-[var(--forest)]">03. Where should we send our response?</label>
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                    <input name="name" className="underline-input" placeholder="Full Name" required />
+                    <input name="email" type="email" className="underline-input" placeholder="Email Address" required />
+                  </div>
+                </div>
 
-        {/* Submit */}
-        <div className="mt-8 flex items-center gap-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`inline-flex items-center justify-center font-semibold px-6 py-3 rounded-md shadow-md transition-all duration-300 ${isSubmitting
-              ? 'bg-green-300 cursor-not-allowed'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-              }`}
-          >
-            {isSubmitting ? 'Sending...' : (
-              <>
-                <Send className="w-4 h-4 mr-2" />
-                Send Inquiry
-              </>
-            )}
-          </button>
-
-          {/* Animated Success */}
-          <AnimatePresence>
-            {sent && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="flex items-center text-green-700 text-sm font-medium"
-              >
-                <CheckCircle2 className="w-5 h-5 mr-2" />
-                Message sent successfully!
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.form>
-
-      {/* Contact Info (Optional footer) */}
-      <div className="max-w-3xl mx-auto text-center mt-16 space-y-4 text-gray-700">
-        <p className="text-lg font-semibold text-green-700">
-          Prefer to reach us directly?
-        </p>
-        <div className="flex flex-col md:flex-row justify-center gap-4 text-sm">
-          <a
-            href="mailto:info@premieragric.co.za"
-            className="flex items-center justify-center gap-2 hover:text-green-600"
-          >
-            <Mail className="w-4 h-4" /> info@premieragric.co.za
-          </a>
-          <a
-            href="tel:+27735613851"
-            className="flex items-center justify-center gap-2 hover:text-green-600"
-          >
-            <Phone className="w-4 h-4" /> +27 73 561 3851
-          </a>
-          <a
-            href="/contact"
-            className="flex items-center justify-center gap-2 hover:text-green-600"
-          >
-            <MapPin className="w-4 h-4" /> Durban, South Africa
-          </a>
+                <div className="pt-6">
+                  <button type="submit" disabled={isSubmitting} className="editorial-link inline-flex items-center gap-4 bg-[var(--forest)] px-8 py-4 text-[var(--surface)] hover:bg-[var(--clay)]">
+                    {isSubmitting ? 'Submitting...' : 'Submit inquiry'}
+                  </button>
+                  {sent ? <p className="mt-4 text-sm text-[var(--clay)]">Inquiry sent successfully.</p> : null}
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-    </motion.section>
+    </main>
   )
 }

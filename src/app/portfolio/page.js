@@ -1,4 +1,3 @@
-import Header from '../../components/Header';
 import PortfolioGallery from '../../components/PortfolioGallery';
 
 export default function Portfolio(){
@@ -9,8 +8,6 @@ export default function Portfolio(){
   ];
   return (
     <>
-      <Header />
-    
       <PortfolioGallery items={items} />
     </>
   );

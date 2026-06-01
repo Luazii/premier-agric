@@ -34,3 +34,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE and AI generated
+.vscode/
+.codex/
+stitch_aesthetic_portfolio_redesign/

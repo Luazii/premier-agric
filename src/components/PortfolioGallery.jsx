@@ -1,290 +1,58 @@
-'use client'
-import { useState } from 'react'
-import { X, ArrowLeft, ArrowRight } from 'lucide-react'
-
 export default function PortfolioGallery() {
-  const [selectedMedia, setSelectedMedia] = useState(null)
-  const [activeTab, setActiveTab] = useState('all')
-  const [currentIndex, setCurrentIndex] = useState(0)
-
-  const galleryItems = [
-    // News Letters linked to LinkedIn
-    {
-      id: 1,
-      type: 'social',
-      platform: 'LinkedIn',
-      category: 'newsletters',
-      title: 'Real Strength Lies in Choosing Peace Over Activity',
-      description: 'Discover how choosing peace can be a source of strength in the agricultural sector.',
-      image: '/images/youthempowermentcamp_page-0001.jpg',
-      embed: 'https://www.linkedin.com/posts/premier-agric_real-strength-lies-in-choosing-peace-over-activity-7353065167577919488-IxjX?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
-      tags: ['Leadership', 'Mental Health'],
-    },
-    {
-      id: 2,
-      type: 'social',
-      platform: 'LinkedIn',
-      category: 'newsletters',
-      title: 'Meet Njabulo Mthembu from Shazini Farm',
-      description: 'Highlighting the journey and achievements of Njabulo Mthembu at Shazini Farm.',
-      image: '/images/Meet Njabulo Mthembu from Shazini Farm.png',
-      embed: 'https://www.linkedin.com/posts/premier-agric_meet-njabulo-mthembu-from-shazini-farm-activity-7376229217052749824-Rf1r?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
-      tags: ['Community', 'Farming Success'],
-    },
-    {
-      id: 3,
-      type: 'social',
-      platform: 'LinkedIn',
-      category: 'newsletters',
-      title: 'The Irish Tech Challenge South Africa',
-      description: 'Insights from the Irish Tech Challenge and its impact on South African agriculture.',
-      image: '/images/irishtechchallenge.jpeg',
-      embed: 'https://www.linkedin.com/posts/premier-agric_the-irish-tech-challenge-south-africa-was-activity-7399401576022532097-qvnR?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
-      tags: ['Tech', 'Innovation', 'Global Partnerships'],
-    },
-    {
-      id: 6,
-      type: 'social',
-      platform: 'LinkedIn',
-      category: 'newsletters',
-      title: 'Are We Creating a Digital Apartheid?',
-      description: 'A critical look at the digital divide in modern agriculture.',
-      image: '/images/digitalapartheid.jpeg',
-      embed: 'https://www.linkedin.com/posts/premier-agric_are-we-creating-a-digital-apartheid-in-activity-7422945423981445120-Rl_I?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
-      tags: ['Digital Divide', 'Ethics', 'Technology'],
-    },
-    {
-      id: 7,
-      type: 'social',
-      platform: 'LinkedIn',
-      category: 'newsletters',
-      title: 'We Have the Tech But Do We Have the Troops?',
-      description: 'Discussing the human capital needed to drive agricultural technology forward.',
-      image: '/images/troops.jpeg',
-      embed: 'https://www.linkedin.com/posts/premier-agric_we-have-the-tech-but-do-we-have-the-troops-activity-7424379922669998080-1UQB?utm_source=share&utm_medium=member_ios&rcm=ACoAAEN7xzgBVDHuhxSpaLH51vOOZQxQGbaUdWQ',
-      tags: ['Skills Gap', 'Workforce', 'Future of Work'],
-    },
-
-    // Social Media Highlights
-    {
-      id: 4,
-      type: 'social',
-      platform: 'Instagram',
-      category: 'social',
-      title: 'Hope Grows Here',
-      description:
-        'Snapshots from our outreach and farmer mentorships — where growth meets gratitude.',
-      image: '/images/instagram.jpg',
-      embed:
-        'https://www.instagram.com/p/DPdwT-RjmbK/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
-      tags: ['Community', 'Hope'],
-    },
-    {
-      id: 5,
-      type: 'social',
-      platform: 'Facebook',
-      category: 'social',
-      title: 'Shade Net and Tunnel Systems',
-      description:
-        'Unlocking the Future of Farming — introducing affordable climate-smart infrastructure for smallholders.',
-      image: '/images/facebook.jpg',
-      embed: 'https://www.facebook.com/share/v/1CmGR2LjbX/',
-      tags: ['Technology', 'Climate-smart', 'Innovation'],
-    },
-    {
-      id: 8,
-      type: 'social',
-      platform: 'Website',
-      category: 'social',
-      title: 'Badger Analytics – The Future of Precision Farming',
-      description:
-        'A flagship innovation by Premier Agric, Badger Analytics is more than just data—it’s the pulse of your farm. Designed to transform complex agricultural metrics into actionable intelligence, this solution empowers farmers to make high-stakes decisions with absolute confidence.',
-      image: '/images/badger logo.png',
-      embed: 'https://badgeranalytics.co.za',
-      tags: ['Premier Agric Innovation', 'Data Science', 'High Impact'],
-    },
-  ]
-
-  const categories = [
-    { id: 'all', name: 'All Items' },
-    { id: 'newsletters', name: 'News Letters' },
-    { id: 'social', name: 'Social Media' },
-  ]
-
-  const filteredItems =
-    activeTab === 'all'
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === activeTab)
-
-  const openModal = (item) => {
-    setSelectedMedia(item)
-    setCurrentIndex(galleryItems.indexOf(item))
-    document.body.style.overflow = 'hidden'
-  }
-
-  const closeModal = () => {
-    setSelectedMedia(null)
-    document.body.style.overflow = 'unset'
-  }
-
-  const nextSlide = () => {
-    const nextIndex = (currentIndex + 1) % galleryItems.length
-    setCurrentIndex(nextIndex)
-    setSelectedMedia(galleryItems[nextIndex])
-  }
-
-  const prevSlide = () => {
-    const prevIndex =
-      (currentIndex - 1 + galleryItems.length) % galleryItems.length
-    setCurrentIndex(prevIndex)
-    setSelectedMedia(galleryItems[prevIndex])
-  }
-
   return (
-    <div className="py-20 bg-gray-50">
-      {/* Header */}
-      <div className="px-6 lg:px-12 text-center mb-16">
-        <h1 className="text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
-          Proven <span className="text-green-600">Impact in Action</span>
-        </h1>
-        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
-          See how real farmers, cooperatives, and agribusinesses have achieved
-          measurable growth through Premier Agric partnerships. Each story
-          begins with a challenge — and ends with transformation.
-        </p>
-
-        {/* Category Buttons */}
-        <div className="flex flex-wrap justify-center gap-3">
-          {categories.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => setActiveTab(c.id)}
-              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${activeTab === c.id
-                ? 'bg-green-600 text-white shadow-lg'
-                : 'bg-white border border-gray-300 text-gray-700 hover:bg-green-50'
-                }`}
-            >
-              {c.name}
-            </button>
-          ))}
+    <div className="px-6 pb-32 pt-12 md:px-8 md:pt-20">
+      <section className="mx-auto max-w-7xl py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow">Case studies & impact</p>
+          <h1 className="section-title mt-6 text-[var(--forest)]">Proven impact in action.</h1>
+          <p className="mx-auto mt-8 max-w-2xl text-xl leading-8 text-[var(--ink-muted)]">
+            Exploring the intersection of strategic foresight and tangible agricultural transformation.
+          </p>
         </div>
-      </div>
+      </section>
 
-      {/* Gallery Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 lg:px-12 mb-20">
-        {filteredItems.map((item) => (
-          <article
-            key={item.id}
-            className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all cursor-pointer"
-            onClick={() => openModal(item)}
-          >
-            <div className="relative h-56 overflow-hidden">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-              />
-            </div>
-
-            <div className="p-5">
-              <h3 className="text-lg font-semibold text-green-700 mb-1">
-                {item.title}
-              </h3>
-              <p className="text-sm text-gray-700 line-clamp-3">
-                {item.description.split('Result:')[0]} {/* Tease before modal */}
-              </p>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* Modal */}
-      {selectedMedia && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          <button
-            onClick={closeModal}
-            className="absolute top-6 right-6 p-2 text-white hover:text-green-400 transition-colors"
-          >
-            <X className="w-8 h-8" />
-          </button>
-
-          <button
-            onClick={prevSlide}
-            className="absolute left-6 text-white hover:text-green-400"
-          >
-            <ArrowLeft className="w-8 h-8" />
-          </button>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-6 text-white hover:text-green-400"
-          >
-            <ArrowRight className="w-8 h-8" />
-          </button>
-
-          <div className="bg-white rounded-2xl max-w-4xl w-full mx-4 overflow-hidden">
-            {selectedMedia.type === 'social' ? (
-              <div className="aspect-video bg-gray-100 relative">
-                <img
-                  src={selectedMedia.image}
-                  alt={selectedMedia.title}
-                  className="w-full h-full object-cover"
-                />
-                <a
-                  href={selectedMedia.embed}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-700 transition-all"
-                >
-                  View on {selectedMedia.platform}
-                </a>
+      <section className="mx-auto max-w-7xl">
+        <div className="mb-24 grid grid-cols-1 items-center gap-8 md:grid-cols-12">
+          <div className="group relative md:col-span-7">
+            <img src="/images/Meet Njabulo Mthembu from Shazini Farm.png" alt="Shazini Farm" className="h-[600px] w-full object-cover transition duration-700 group-hover:scale-[1.02]" />
+          </div>
+          <div className="md:col-span-4 md:col-start-9">
+            <p className="eyebrow mb-4 border-b border-[var(--line)] pb-4 text-[var(--ink-muted)]">Livestock management</p>
+            <h2 className="font-display text-5xl text-[var(--forest)]">Meet Njabulo Mthembu from Shazini Farm</h2>
+            <div className="mt-8 space-y-6">
+              <div>
+                <p className="eyebrow mb-2">The challenge</p>
+                <p className="leading-7 text-[var(--ink-muted)]">Optimising farm resilience and practical decision-making in volatile climate conditions.</p>
               </div>
-            ) : (
-              <img
-                src={selectedMedia.image}
-                alt={selectedMedia.title}
-                className="w-full h-auto object-contain"
-              />
-            )}
-
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-2 text-green-700">
-                {selectedMedia.title}
-              </h3>
-              <div className="text-gray-600 mb-4 whitespace-pre-line leading-relaxed">
-                {selectedMedia.description}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {selectedMedia.tags?.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <div>
+                <p className="eyebrow mb-2">The transformation</p>
+                <p className="leading-7 text-[var(--ink-muted)]">A sharper mix of operational guidance, farmer visibility, and story-led public proof.</p>
               </div>
             </div>
           </div>
         </div>
-      )}
 
-      {/* CTA Section */}
-      <section className="bg-[#688E3C] text-white text-center py-20 px-6">
-        <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-          Let’s Turn Possibility Into Progress
-        </h2>
-        <p className="max-w-2xl mx-auto text-white/90 mb-8">
-          Your goals deserve partners who can help you make measurable strides.
-          From precision farming to youth mentorship to community development, we’re ready to help you build what’s
-          next one data-driven, hands-on step at a time.
-        </p>
-        <a
-          href="/contact"
-          className="bg-[#FDE335] text-[#1B3A1A] px-8 py-3 rounded-md font-semibold hover:bg-yellow-400 transition"
-        >
-          Discuss Your Next Project →
-        </a>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+          <div className="flex flex-col pt-8 md:col-span-4">
+            <p className="eyebrow mb-4 border-b border-[var(--line)] pb-4 text-[var(--ink-muted)]">Farmer voices</p>
+            <h2 className="font-display text-4xl text-[var(--forest)]">Voices of the land</h2>
+            <p className="mt-6 leading-7 text-[var(--ink-muted)]">
+              Direct insights and testimony from agricultural leaders adapting to new strategic frameworks.
+            </p>
+            <img src="/images/instagram.jpg" alt="Farmer voices" className="mt-10 h-[400px] w-full object-cover" />
+          </div>
+
+          <div className="md:col-span-7 md:col-start-6">
+            <img src="/images/irishtechchallenge.jpeg" alt="Irish Tech Challenge" className="h-[500px] w-full object-cover" />
+            <div className="relative z-10 -mt-24 ml-0 max-w-lg border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm md:ml-12">
+              <p className="eyebrow mb-4 border-b border-[var(--line)] pb-4 text-[var(--ink-muted)]">Global integration</p>
+              <h2 className="font-display text-4xl text-[var(--forest)]">The Irish Tech Challenge</h2>
+              <p className="mt-6 leading-7 text-[var(--ink-muted)]">
+                Bridging international innovation with South African agricultural resilience to forge new sustainable practices.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   )
