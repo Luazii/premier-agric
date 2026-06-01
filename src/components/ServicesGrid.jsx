@@ -9,7 +9,7 @@ export default function ServicesGrid() {
       label: '01. Strategy',
       title: 'Agribusiness Consulting',
       text: 'Strong operations start with a strong model. We help you design clear, profitable business systems — which means you can secure buyers, reduce waste, and scale with confidence.',
-      image: '/images/service-6.jpg',
+      image: '/images/agriconsulting.JPG',
       dark: false,
     },
     {
@@ -22,7 +22,7 @@ export default function ServicesGrid() {
       label: '03. Validation',
       title: 'Sustainability & Impact Reporting',
       text: 'For partners who must prove value. We track real-world data on yields, jobs created, and climate resilience — which means you get credible, audit-ready reports that validate your investment and attract future funding.',
-      image: '/images/service-4.jpg',
+      image: '/images/Sustainability%20&%20Impact%20Reporting.jpg',
       bullets: ['Yield tracking & forecasting', 'Job creation & employment metrics', 'Climate resilience analysis'],
     },
   ]
