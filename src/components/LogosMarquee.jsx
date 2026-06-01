@@ -7,7 +7,7 @@ export default function LogosMarquee() {
   const baseLogos = [
     { src: '/images/partners/ADA-LOGO-.png', url: 'https://ada-kzn.co.za/' },
     { src: '/images/partners/Agriseta.png', url: 'https://www.agriseta.co.za/' },
-    { src: '/images/partners/Logo Everpix transparent.png', url: '#' },
+    { src: '/images/partners/Logo Everpix transparent.png', url: 'https://africanoilsbyeverpix.co.za/' },
     { src: '/images/partners/Ngcebo consulting Logo.jpg', url: 'https://ngceboconsulting.co.za/' },
     { src: '/images/partners/badger logo.png', url: 'https://badgeranalytics.co.za/' },
     { src: '/images/partners/coretech_logo.png', url: 'https://coretech.co.za/' },
