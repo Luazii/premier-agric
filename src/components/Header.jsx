@@ -9,7 +9,14 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const pathname = usePathname()
-  const { isSignedIn } = useUser()
+  const { isSignedIn, user } = useUser()
+
+  const email = user?.primaryEmailAddress?.emailAddress
+  const isAdmin =
+    isSignedIn &&
+    (user.publicMetadata?.role === 'admin' ||
+      email === 'lgumbi2169@gmail.com' ||
+      email?.endsWith('@premieragric.co.za'))
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
@@ -30,6 +37,7 @@ export default function Header() {
     { name: 'Services', href: '/services' },
     { name: 'Portfolio', href: '/portfolio' },
     { name: 'Webinars', href: '/webinars' },
+    ...(isAdmin ? [{ name: 'Admin Portal', href: '/admin' }] : []),
     { name: 'Contact', href: '/contact' },
   ]
 

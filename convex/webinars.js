@@ -39,9 +39,38 @@ export const create = mutation({
   },
 })
 
+export const update = mutation({
+  args: {
+    id: v.id('webinars'),
+    title: v.string(),
+    description: v.string(),
+    date: v.number(),
+    duration: v.number(),
+    hostName: v.string(),
+    hostTitle: v.string(),
+    topic: v.string(),
+    maxAttendees: v.optional(v.number()),
+    imageUrl: v.optional(v.string()),
+    meetingLink: v.optional(v.string()),
+    isPublished: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...data } = args
+    await ctx.db.patch(id, data)
+  },
+})
+
 export const remove = mutation({
   args: { id: v.id('webinars') },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id)
   },
 })
+
+export const listAll = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query('webinars').collect()
+  },
+})
+

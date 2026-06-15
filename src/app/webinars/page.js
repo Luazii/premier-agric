@@ -43,6 +43,16 @@ function WebinarCard({ webinar }) {
 
   const [loading, setLoading] = useState(false)
   const [justRegistered, setJustRegistered] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  function handleShare() {
+    if (typeof window !== 'undefined') {
+      const link = `${window.location.origin}/webinars/${webinar._id}`
+      navigator.clipboard.writeText(link)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
 
   const isPast = webinar.date < Date.now()
   const isFull =
@@ -120,32 +130,100 @@ function WebinarCard({ webinar }) {
 
       <div className="px-6 md:px-8 pb-6 md:pb-8">
         {isPast ? (
-          <span className="block text-center py-3 text-white/30 text-sm font-mono tracking-wide border border-white/10">
-            ENDED
-          </span>
+          <div className="flex gap-2">
+            <span className="flex-1 text-center py-3 text-white/30 text-sm font-mono tracking-wide border border-white/10">
+              ENDED
+            </span>
+            <button
+              onClick={handleShare}
+              title="Copy share link"
+              className="px-4 border border-white/10 text-white/60 hover:text-white hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all duration-300 flex items-center justify-center"
+            >
+              {copied ? (
+                <svg className="w-4 h-4 fill-emerald-400" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                </svg>
+              )}
+            </button>
+          </div>
         ) : isFull && !registered ? (
-          <span className="block text-center py-3 text-white/30 text-sm font-mono tracking-wide border border-white/10">
-            FULLY BOOKED
-          </span>
+          <div className="flex gap-2">
+            <span className="flex-1 text-center py-3 text-white/30 text-sm font-mono tracking-wide border border-white/10">
+              FULLY BOOKED
+            </span>
+            <button
+              onClick={handleShare}
+              title="Copy share link"
+              className="px-4 border border-white/10 text-white/60 hover:text-white hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all duration-300 flex items-center justify-center"
+            >
+              {copied ? (
+                <svg className="w-4 h-4 fill-emerald-400" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                </svg>
+              )}
+            </button>
+          </div>
         ) : !isSignedIn ? (
           <div className="flex flex-col gap-2">
-            <SignInButton mode="modal">
-              <button className="w-full py-3 text-sm font-mono tracking-widest uppercase border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--forest)] transition-all duration-300">
-                SIGN IN TO REGISTER
+            <div className="flex gap-2">
+              <SignInButton mode="modal">
+                <button className="flex-1 py-3 text-sm font-mono tracking-widest uppercase border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--forest)] transition-all duration-300">
+                  SIGN IN TO REGISTER
+                </button>
+              </SignInButton>
+              <button
+                onClick={handleShare}
+                title="Copy share link"
+                className="px-4 border border-white/10 text-white/60 hover:text-white hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all duration-300 flex items-center justify-center"
+              >
+                {copied ? (
+                  <svg className="w-4 h-4 fill-emerald-400" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                  </svg>
+                )}
               </button>
-            </SignInButton>
+            </div>
             <p className="text-center text-xs text-white/30 font-mono">
               Sign-in required · Meeting link shared upon registration
             </p>
           </div>
         ) : registered ? (
           <div className="flex flex-col gap-2">
-            <Link
-              href={`/webinars/${webinar._id}`}
-              className="block text-center py-3 text-emerald-400 text-sm font-mono tracking-widest uppercase border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all"
-            >
-              ● JOIN SESSION
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href={`/webinars/${webinar._id}`}
+                className="flex-1 block text-center py-3 text-emerald-400 text-sm font-mono tracking-widest uppercase border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all"
+              >
+                ● JOIN SESSION
+              </Link>
+              <button
+                onClick={handleShare}
+                title="Copy share link"
+                className="px-4 border border-white/10 text-white/60 hover:text-white hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all duration-300 flex items-center justify-center"
+              >
+                {copied ? (
+                  <svg className="w-4 h-4 fill-emerald-400" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                  </svg>
+                )}
+              </button>
+            </div>
             <button
               onClick={handleUnregister}
               disabled={loading}
@@ -155,13 +233,30 @@ function WebinarCard({ webinar }) {
             </button>
           </div>
         ) : (
-          <button
-            onClick={handleRegister}
-            disabled={loading}
-            className="w-full py-3 text-sm font-mono tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all duration-300 disabled:opacity-50"
-          >
-            {loading ? 'REGISTERING…' : 'REGISTER NOW'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleRegister}
+              disabled={loading}
+              className="flex-1 py-3 text-sm font-mono tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all duration-300 disabled:opacity-50"
+            >
+              {loading ? 'REGISTERING…' : 'REGISTER NOW'}
+            </button>
+            <button
+              onClick={handleShare}
+              title="Copy share link"
+              className="px-4 border border-white/10 text-white/60 hover:text-white hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all duration-300 flex items-center justify-center"
+            >
+              {copied ? (
+                <svg className="w-4 h-4 fill-emerald-400" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                </svg>
+              )}
+            </button>
+          </div>
         )}
       </div>
     </article>

@@ -44,6 +44,15 @@ export default function WebinarRoomPage() {
 
   const [loading, setLoading] = useState(false)
   const [justRegistered, setJustRegistered] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  function handleCopyShareLink() {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
 
   const registered = isRegistered || justRegistered
   const isPast = webinar ? webinar.date < Date.now() : false
@@ -119,10 +128,21 @@ export default function WebinarRoomPage() {
               {formatDate(webinar.date)} · {formatTime(webinar.date)} · {webinar.duration} min
             </span>
           </div>
-          <p className="text-white/50 text-sm">
-            Hosted by <span className="text-white/70">{webinar.hostName}</span>,{' '}
-            {webinar.hostTitle}
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-1">
+            <p className="text-white/50 text-sm">
+              Hosted by <span className="text-white/70">{webinar.hostName}</span>,{' '}
+              {webinar.hostTitle}
+            </p>
+            <button
+              onClick={handleCopyShareLink}
+              className="text-xs font-mono tracking-wider text-white/60 hover:text-white border border-white/10 px-3 py-1.5 transition-all flex items-center gap-1.5 max-w-max hover:border-[var(--gold)]/40 hover:bg-white/5"
+            >
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+              </svg>
+              {copied ? 'Link Copied!' : 'Copy Share Link'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -195,14 +215,42 @@ export default function WebinarRoomPage() {
                 Cancel registration
               </button>
             </div>
-            <JitsiRoom
-              roomName={roomName}
-              displayName={user.fullName ?? user.primaryEmailAddress?.emailAddress}
-              userEmail={user.primaryEmailAddress?.emailAddress}
-            />
-            <p className="text-xs text-white/25 font-mono text-center">
-              Room · {roomName} · Only registered attendees see this link
-            </p>
+            
+            {webinar.meetingLink ? (
+              <div className="flex flex-col items-center justify-center py-16 px-6 border border-white/10 bg-white/5 text-center gap-6">
+                <div className="w-12 h-px bg-[var(--gold)]" />
+                <p className="font-display text-xl">The webinar is hosted externally</p>
+                <p className="text-white/50 text-sm max-w-md">
+                  Click the button below to join the live session on the host's platform (e.g. Zoom, Google Meet, or Microsoft Teams).
+                </p>
+                <a
+                  href={webinar.meetingLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-3.5 font-mono text-sm tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all font-semibold inline-flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+                  </svg>
+                  JOIN MEETING NOW
+                </a>
+                <p className="text-[10px] text-white/25 font-mono select-all">
+                  Link: {webinar.meetingLink}
+                </p>
+                <div className="w-12 h-px bg-[var(--gold)]" />
+              </div>
+            ) : (
+              <>
+                <JitsiRoom
+                  roomName={roomName}
+                  displayName={user.fullName ?? user.primaryEmailAddress?.emailAddress}
+                  userEmail={user.primaryEmailAddress?.emailAddress}
+                />
+                <p className="text-xs text-white/25 font-mono text-center">
+                  Room · {roomName} · Only registered attendees see this room
+                </p>
+              </>
+            )}
           </div>
         )}
 
