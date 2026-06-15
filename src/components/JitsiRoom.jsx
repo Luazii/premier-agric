@@ -6,7 +6,7 @@ export default function JitsiRoom({ roomName, displayName, userEmail }) {
   return (
     <div className="w-full overflow-hidden border border-white/10">
       <JitsiMeeting
-        domain="meet.jit.si"
+        domain={process.env.NEXT_PUBLIC_JITSI_DOMAIN || 'meet.ffmuc.net'}
         roomName={roomName}
         configOverwrite={{
           startWithAudioMuted: true,
