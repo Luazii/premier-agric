@@ -54,7 +54,7 @@ function WebinarCard({ webinar }) {
     }
   }
 
-  const isPast = webinar.date < Date.now()
+  const isPast = webinar.date + webinar.duration * 60 * 1000 < Date.now()
   const isFull =
     webinar.maxAttendees != null &&
     registrationCount != null &&
@@ -293,8 +293,8 @@ export default function WebinarsPage() {
   const webinars = useQuery(api.webinars.list)
 
   const now = Date.now()
-  const upcoming = webinars?.filter((w) => w.date >= now) ?? []
-  const past = webinars?.filter((w) => w.date < now) ?? []
+  const upcoming = webinars?.filter((w) => w.date + w.duration * 60 * 1000 >= now) ?? []
+  const past = webinars?.filter((w) => w.date + w.duration * 60 * 1000 < now) ?? []
 
   return (
     <div className="bg-[#061b0e] min-h-screen text-white">

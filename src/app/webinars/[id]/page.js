@@ -55,7 +55,7 @@ export default function WebinarRoomPage() {
   }
 
   const registered = isRegistered || justRegistered
-  const isPast = webinar ? webinar.date < Date.now() : false
+  const isPast = webinar ? (webinar.date + webinar.duration * 60 * 1000) < Date.now() : false
   const isFull =
     webinar?.maxAttendees != null &&
     registrationCount != null &&

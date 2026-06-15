@@ -240,8 +240,10 @@ export default function AdminPortalPage() {
     setErrorMessage('')
   }
 
-  const upcomingWebinars = webinars?.filter((w) => w.date >= Date.now()) ?? []
-  const pastWebinars = webinars?.filter((w) => w.date < Date.now()) ?? []
+  const upcomingWebinars =
+    webinars?.filter((w) => w.date + w.duration * 60 * 1000 >= Date.now()) ?? []
+  const pastWebinars =
+    webinars?.filter((w) => w.date + w.duration * 60 * 1000 < Date.now()) ?? []
 
   return (
     <div className="bg-[#061b0e] min-h-screen text-white pt-24 pb-16">
