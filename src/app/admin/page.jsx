@@ -116,6 +116,7 @@ export default function AdminPortalPage() {
     isSignedIn &&
     (user.publicMetadata?.role === 'admin' ||
       email === 'lgumbi2169@gmail.com' ||
+      email === 'support@premieragric.co.za' ||
       email?.endsWith('@premieragric.co.za'))
 
   if (!isAdmin) {
