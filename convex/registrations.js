@@ -1,5 +1,6 @@
 import { query, mutation } from './_generated/server'
 import { v } from 'convex/values'
+import { internal } from './_generated/api'
 
 export const register = mutation({
   args: {
@@ -18,13 +19,29 @@ export const register = mutation({
 
     if (existing) return existing._id
 
-    return await ctx.db.insert('registrations', {
+    const registrationId = await ctx.db.insert('registrations', {
       webinarId: args.webinarId,
       clerkUserId: args.clerkUserId,
       userName: args.userName,
       userEmail: args.userEmail,
       registeredAt: Date.now(),
     })
+
+    const webinar = await ctx.db.get(args.webinarId)
+    if (webinar) {
+      await ctx.scheduler.runAfter(0, internal.emails.sendConfirmation, {
+        registrationId,
+      })
+
+      const reminderTime = webinar.date - 24 * 60 * 60 * 1000
+      if (reminderTime > Date.now()) {
+        await ctx.scheduler.runAt(reminderTime, internal.emails.sendReminder, {
+          registrationId,
+        })
+      }
+    }
+
+    return registrationId
   },
 })
 
