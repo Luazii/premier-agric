@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 
@@ -87,9 +88,11 @@ export default function ServicesGrid() {
           className="group relative overflow-hidden border border-[var(--line)] md:col-span-8 glass hover:shadow-lg transition-all duration-300"
         >
           <div className="relative h-96 overflow-hidden">
-            <img
+            <Image
               src={services[0].image}
               alt={services[0].title}
+              width={800}
+              height={600}
               className="h-full w-full object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[rgba(6,27,14,0.92)] via-[rgba(6,27,14,0.4)] to-transparent" />
@@ -155,9 +158,11 @@ export default function ServicesGrid() {
             </a>
           </div>
           <div className="h-[500px] overflow-hidden bg-[var(--surface-soft)] relative group border border-[var(--line)]">
-            <img
+            <Image
               src={services[2].image}
               alt={services[2].title}
+              width={800}
+              height={600}
               className="h-full w-full object-cover transition duration-700 group-hover:scale-102"
             />
           </div>

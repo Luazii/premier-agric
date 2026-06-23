@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useUser, SignInButton, UserButton } from '@clerk/nextjs'
 
 export default function Header() {
@@ -57,7 +58,7 @@ export default function Header() {
       >
         <div className="relative z-[70] mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:h-24 md:px-8">
           <Link href="/" className="flex items-center gap-3">
-            <img
+            <Image
               src="/images/Logo.png"
               alt="Premier Agric Logo"
               className={`w-auto object-contain transition-all duration-300 ${
@@ -65,6 +66,7 @@ export default function Header() {
               }`}
               width={176}
               height={56}
+              priority
             />
             {isMenuOpen && (
               <span className="font-display text-xl font-semibold tracking-wide text-white transition-opacity duration-300">

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {
   Phone,
   Mail,
@@ -32,10 +33,12 @@ export default function Footer() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)]/60 to-transparent" />
       <div className="mx-auto grid max-w-7xl gap-12 px-6 pb-12 md:grid-cols-[1.3fr_0.8fr_1fr] md:px-8">
         <div>
-          <img
+          <Image
             src="/images/Logo.png"
             alt="Premier Agric Logo"
             className="mb-6 h-10 w-auto"
+            width={140}
+            height={40}
           />
           <p className="max-w-md text-sm leading-7 text-[rgba(255,255,255,0.68)]">
             Premier Agric delivers sustainable agricultural solutions, drone mapping, and empowerment initiatives that help farmers grow smarter and stronger across Africa.

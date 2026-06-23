@@ -1,15 +1,21 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight, PhoneCall } from 'lucide-react'
 
 export default function Hero() {
   return (
     <section id="home" className="relative min-h-[100dvh] overflow-hidden bg-[var(--surface-deep)] text-[var(--surface-soft)]">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: 'url(/images/hero.jpg)' }}
-      />
+      <div className="absolute inset-0">
+        <Image
+          src="/images/hero.jpg"
+          alt="Hero Background"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-b from-[rgba(6,27,14,0.8)] via-[rgba(6,27,14,0.62)] to-[rgba(6,27,14,0.88)]" />
 
       <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-7xl flex-col justify-center px-6 pb-24 pt-32 md:px-8">

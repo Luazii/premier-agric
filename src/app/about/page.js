@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Map, Briefcase, GraduationCap, RefreshCw, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function About() {
   const approaches = [
@@ -81,14 +82,19 @@ export default function About() {
               transition={{ duration: 0.9 }}
               className="absolute inset-0 translate-x-4 translate-y-4 bg-[var(--forest)]/10"
             />
-            <motion.img
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.2 }}
-              src="/images/portfolio-2.jpg"
-              alt="About Premier Agric"
-              className="absolute inset-0 h-full w-full object-cover border border-[var(--line)]"
-            />
+              className="absolute inset-0 h-full w-full"
+            >
+              <Image
+                src="/images/portfolio-2.jpg"
+                alt="About Premier Agric"
+                fill
+                className="object-cover border border-[var(--line)]"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
@@ -116,10 +122,11 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
           <div className="relative h-[500px] md:col-span-5 order-last md:order-first">
             <div className="absolute inset-0 -translate-x-4 -translate-y-4 bg-[var(--clay)]/10" />
-            <img
+            <Image
               src="/images/troops.jpeg"
               alt="Premier Agric Team"
-              className="absolute inset-0 h-full w-full object-cover border border-[var(--line)]"
+              fill
+              className="object-cover border border-[var(--line)]"
             />
             <div className="absolute bottom-6 left-6 bg-[var(--forest)] px-6 py-3 border border-white/10 shadow-lg">
               <span className="eyebrow text-[var(--gold)] text-xs tracking-wider">Empowered farmer focus</span>

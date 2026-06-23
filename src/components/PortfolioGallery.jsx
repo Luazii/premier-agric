@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export default function PortfolioGallery() {
   return (
     <div className="px-6 pb-32 pt-12 md:px-8 md:pt-20">
@@ -14,7 +16,7 @@ export default function PortfolioGallery() {
       <section className="mx-auto max-w-7xl">
         <div className="mb-24 grid grid-cols-1 items-center gap-8 md:grid-cols-12">
           <div className="group relative md:col-span-7">
-            <img src="/images/Meet Njabulo Mthembu from Shazini Farm.png" alt="Shazini Farm" className="h-[600px] w-full object-cover transition duration-700 group-hover:scale-[1.02]" />
+            <Image src="/images/Meet Njabulo Mthembu from Shazini Farm.png" alt="Shazini Farm" width={800} height={600} className="h-[600px] w-full object-cover transition duration-700 group-hover:scale-[1.02]" />
           </div>
           <div className="md:col-span-4 md:col-start-9">
             <p className="eyebrow mb-4 border-b border-[var(--line)] pb-4 text-[var(--ink-muted)]">Livestock management</p>
@@ -39,11 +41,11 @@ export default function PortfolioGallery() {
             <p className="mt-6 leading-7 text-[var(--ink-muted)]">
               Direct insights and testimony from agricultural leaders adapting to new strategic frameworks.
             </p>
-            <img src="/images/instagram.jpg" alt="Farmer voices" className="mt-10 h-[400px] w-full object-cover" />
+            <Image src="/images/instagram.jpg" alt="Farmer voices" width={600} height={400} className="mt-10 h-[400px] w-full object-cover" />
           </div>
 
           <div className="md:col-span-7 md:col-start-6">
-            <img src="/images/irishtechchallenge.jpeg" alt="Irish Tech Challenge" className="h-[500px] w-full object-cover" />
+            <Image src="/images/irishtechchallenge.jpeg" alt="Irish Tech Challenge" width={800} height={500} className="h-[500px] w-full object-cover" />
             <div className="relative z-10 -mt-24 ml-0 max-w-lg border border-[var(--line)] bg-[var(--surface)] p-8 shadow-sm md:ml-12">
               <p className="eyebrow mb-4 border-b border-[var(--line)] pb-4 text-[var(--ink-muted)]">Global integration</p>
               <h2 className="font-display text-4xl text-[var(--forest)]">The Irish Tech Challenge</h2>

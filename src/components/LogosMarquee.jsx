@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 export default function LogosMarquee() {
@@ -42,9 +43,11 @@ export default function LogosMarquee() {
               key={`${logo.src}-${i}`}
               className="px-8 md:px-16 shrink-0 flex items-center justify-center min-w-[120px] transition-transform hover:scale-105"
             >
-              <img
+              <Image
                 src={encodeURI(logo.src)}
                 alt="Partner Logo"
+                width={160}
+                height={64}
                 className="h-12 md:h-16 w-auto object-contain mix-blend-multiply"
               />
             </Link>
