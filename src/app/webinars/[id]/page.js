@@ -8,7 +8,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { api } from '../../../../convex/_generated/api'
 
-const JitsiRoom = dynamic(() => import('../../../components/JitsiRoom'), { ssr: false })
+const LiveKitRoomComponent = dynamic(() => import('../../../components/LiveKitRoomComponent'), { ssr: false })
 
 function formatDate(timestamp) {
   return new Date(timestamp).toLocaleDateString('en-ZA', {
@@ -241,10 +241,9 @@ export default function WebinarRoomPage() {
               </div>
             ) : (
               <>
-                <JitsiRoom
+                <LiveKitRoomComponent
                   roomName={roomName}
                   displayName={user.fullName ?? user.primaryEmailAddress?.emailAddress}
-                  userEmail={user.primaryEmailAddress?.emailAddress}
                 />
                 <p className="text-xs text-white/25 font-mono text-center">
                   Room · {roomName} · Only registered attendees see this room
