@@ -39,6 +39,13 @@ export const register = mutation({
           registrationId,
         })
       }
+
+      const startingSoonTime = webinar.date - 60 * 60 * 1000
+      if (startingSoonTime > Date.now()) {
+        await ctx.scheduler.runAt(startingSoonTime, internal.emails.sendStartingSoon, {
+          registrationId,
+        })
+      }
     }
 
     return registrationId
