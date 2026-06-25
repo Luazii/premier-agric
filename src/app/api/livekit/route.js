@@ -1,11 +1,15 @@
 import { AccessToken } from 'livekit-server-sdk';
 import { NextResponse } from 'next/server';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(request) {
   try {
+    const user = await currentUser();
     const { searchParams } = new URL(request.url);
     const roomName = searchParams.get('room');
-    const participantName = searchParams.get('name') || 'Attendee';
+    
+    // Securely use the Clerk user's identity if logged in, otherwise fallback
+    const participantName = user?.fullName ?? user?.primaryEmailAddress?.emailAddress ?? searchParams.get('name') ?? 'Attendee';
 
     if (!roomName) {
       return NextResponse.json({ error: 'Missing room name' }, { status: 400 });
@@ -20,8 +24,12 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
     }
 
-    // Generate a unique participant identity
-    const participantIdentity = `user_${Math.random().toString(36).substring(2, 10)}`;
+    // Determine admin status
+    const email = user?.primaryEmailAddress?.emailAddress;
+    const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase()) : [];
+    const isAdmin = !!email && adminEmails.includes(email.toLowerCase());
+
+    const participantIdentity = user?.id || `anon_${Math.random().toString(36).substring(2, 10)}`;
 
     const at = new AccessToken(apiKey, apiSecret, {
       identity: participantIdentity,
@@ -33,6 +41,7 @@ export async function GET(request) {
       room: roomName,
       canPublish: true,
       canSubscribe: true,
+      roomAdmin: isAdmin, // Grants admin controls in the UI if true
     });
 
     const token = await at.toJwt();
