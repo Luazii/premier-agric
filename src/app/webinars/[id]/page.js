@@ -55,7 +55,22 @@ export default function WebinarRoomPage() {
   }
 
   const registered = isRegistered || justRegistered
-  const isPast = webinar ? (webinar.date + webinar.duration * 60 * 1000) < Date.now() : false
+  const email = user?.primaryEmailAddress?.emailAddress
+  const isAdmin =
+    isSignedIn &&
+    (user.publicMetadata?.role === 'admin' ||
+      email === 'lgumbi2169@gmail.com' ||
+      email === 'support@premieragric.co.za' ||
+      email?.endsWith('@premieragric.co.za'))
+
+  const now = Date.now()
+  const startTime = webinar ? webinar.date - 10 * 60 * 1000 : 0
+  const endTime = webinar ? webinar.date + (webinar.duration + 10) * 60 * 1000 : 0
+
+  const isTooEarly = webinar && !isAdmin ? now < startTime : false
+  const isPast = webinar && !isAdmin ? now > endTime : (webinar ? (webinar.date + webinar.duration * 60 * 1000) < now : false)
+  const isLiveWindow = webinar ? (isAdmin || (now >= startTime && now <= endTime)) : false
+
   const isFull =
     webinar?.maxAttendees != null &&
     registrationCount != null &&
@@ -90,7 +105,7 @@ export default function WebinarRoomPage() {
     }
   }
 
-  if (webinar === undefined) {
+  if (webinar === undefined || (isSignedIn && isRegistered === undefined)) {
     return (
       <div className="bg-[#061b0e] min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border border-[var(--gold)]/40 border-t-[var(--gold)] rounded-full animate-spin" />
@@ -194,6 +209,22 @@ export default function WebinarRoomPage() {
           </div>
         )}
 
+        {/* Gate: signed in, registered, but too early */}
+        {isSignedIn && registered && isTooEarly && (
+          <div className="flex flex-col items-center justify-center gap-6 py-24 border border-white/10 bg-white/5 text-center px-4">
+            <div className="w-12 h-px bg-[var(--gold)]" />
+            <p className="font-display text-2xl">The session room is not open yet</p>
+            <p className="text-white/50 text-sm max-w-md">
+              The live room will activate 10 minutes before the scheduled start time. 
+              Please return at <span className="text-white/80">{formatTime(webinar.date - 10 * 60 * 1000)} SAST</span> to join the meeting.
+            </p>
+            <div className="px-4 py-2 bg-white/5 border border-white/10 font-mono text-xs text-white/40">
+              Scheduled Start · {formatTime(webinar.date)} SAST
+            </div>
+            <div className="w-12 h-px bg-[var(--gold)]" />
+          </div>
+        )}
+
         {/* Past webinar — no room */}
         {isSignedIn && isPast && (
           <div className="flex flex-col items-center justify-center gap-4 py-16 border border-white/10 bg-white/5">
@@ -203,7 +234,7 @@ export default function WebinarRoomPage() {
         )}
 
         {/* Live room */}
-        {isSignedIn && registered && !isPast && (
+        {isSignedIn && registered && isLiveWindow && (
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-emerald-400 font-mono text-xs tracking-widest">● LIVE SESSION ROOM</span>
