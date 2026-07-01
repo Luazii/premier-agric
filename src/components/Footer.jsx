@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react'
 import {
   Phone,
   Mail,
@@ -13,6 +14,29 @@ import {
 
 export default function Footer() {
   const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('idle')
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault()
+    if (!email) return
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'newsletter', email }),
+      })
+      if (res.ok) {
+        setStatus('success')
+        setEmail('')
+      } else {
+        setStatus('error')
+      }
+    } catch (err) {
+      setStatus('error')
+    }
+  }
 
   const quickLinks = [
     { name: 'Home', href: '/' },
@@ -94,20 +118,26 @@ export default function Footer() {
             Subscribe for agricultural insights, technology updates, and empowering stories from across the continent.
           </p>
           <form
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSubscribe}
             className="flex flex-col gap-3"
           >
             <input
               type="email"
               placeholder="Your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               className="w-full rounded-full border border-white/10 bg-white/5 px-5 py-3 text-[var(--surface-soft)] placeholder:text-[rgba(246,241,230,0.45)] focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
             />
             <button
               type="submit"
-              className="rounded-full bg-[var(--gold)] px-4 py-3 font-semibold text-[var(--surface-deep)] hover:brightness-105"
+              disabled={status === 'loading'}
+              className="rounded-full bg-[var(--gold)] px-4 py-3 font-semibold text-[var(--surface-deep)] hover:brightness-105 disabled:opacity-70"
             >
-              Subscribe
+              {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
             </button>
+            {status === 'success' && <p className="text-sm text-green-400">Successfully subscribed!</p>}
+            {status === 'error' && <p className="text-sm text-red-400">Failed to subscribe. Please try again.</p>}
           </form>
         </div>
       </div>
