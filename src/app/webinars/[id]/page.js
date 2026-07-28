@@ -218,8 +218,17 @@ export default function WebinarRoomPage() {
               The live room will activate 10 minutes before the scheduled start time. 
               Please return at <span className="text-white/80">{formatTime(webinar.date - 10 * 60 * 1000)} SAST</span> to join the meeting.
             </p>
-            <div className="px-4 py-2 bg-white/5 border border-white/10 font-mono text-xs text-white/40">
-              Scheduled Start · {formatTime(webinar.date)} SAST
+            <div className="flex flex-col items-center gap-4">
+              <div className="px-4 py-2 bg-white/5 border border-white/10 font-mono text-xs text-white/40">
+                Scheduled Start · {formatTime(webinar.date)} SAST
+              </div>
+              <button
+                onClick={handleUnregister}
+                disabled={loading}
+                className="text-xs text-[var(--gold)]/60 hover:text-[var(--gold)] transition-colors font-mono tracking-wide underline underline-offset-4"
+              >
+                {loading ? 'Canceling...' : 'Cancel registration'}
+              </button>
             </div>
             <div className="w-12 h-px bg-[var(--gold)]" />
           </div>

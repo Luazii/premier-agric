@@ -25,4 +25,17 @@ export default defineSchema({
     .index('by_webinar', ['webinarId'])
     .index('by_user', ['clerkUserId'])
     .index('by_webinar_user', ['webinarId', 'clerkUserId']),
+  newsletters: defineTable({
+    title: v.string(),
+    issue: v.string(),
+    category: v.string(),
+    readTime: v.string(),
+    summary: v.string(),
+    content: v.string(),
+    author: v.string(),
+    imageUrl: v.optional(v.string()),
+    highlights: v.optional(v.array(v.string())),
+    isPublished: v.boolean(),
+    createdAt: v.number(),
+  }),
 })

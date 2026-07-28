@@ -5,6 +5,7 @@ import { useQuery, useMutation } from 'convex/react'
 import { useUser, SignInButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { api } from '../../../convex/_generated/api'
+import { Newspaper, Video, Upload, Image as ImageIcon, Check, Trash2, Edit, Plus, Eye, EyeOff, Sparkles } from 'lucide-react'
 
 // Sub-component to display registrations in a real-time reactive drawer/list
 function WebinarRegistrations({ webinarId }) {
@@ -75,13 +76,22 @@ function formatTime(timestamp) {
 
 export default function AdminPortalPage() {
   const { isLoaded, isSignedIn, user } = useUser()
-  const webinars = useQuery(api.webinars.listAll)
+  const [activeTab, setActiveTab] = useState('newsletters') // 'newsletters' | 'webinars'
 
+  // Webinars Data
+  const webinars = useQuery(api.webinars.listAll)
   const createWebinar = useMutation(api.webinars.create)
   const updateWebinar = useMutation(api.webinars.update)
   const removeWebinar = useMutation(api.webinars.remove)
 
-  const initialFormState = {
+  // Newsletters Data
+  const newsletters = useQuery(api.newsletters.listAll)
+  const createNewsletter = useMutation(api.newsletters.create)
+  const updateNewsletter = useMutation(api.newsletters.update)
+  const removeNewsletter = useMutation(api.newsletters.remove)
+
+  // Webinar Form State
+  const initialWebinarState = {
     title: '',
     description: '',
     date: '',
@@ -94,9 +104,25 @@ export default function AdminPortalPage() {
     meetingLink: '',
     isPublished: true,
   }
+  const [webinarFormData, setWebinarFormData] = useState(initialWebinarState)
+  const [editingWebinarId, setEditingWebinarId] = useState(null)
 
-  const [formData, setFormData] = useState(initialFormState)
-  const [editingId, setEditingId] = useState(null)
+  // Newsletter Form State
+  const initialNewsletterState = {
+    title: '',
+    issue: 'Issue #' + (newsletters ? newsletters.length + 1 : 1),
+    category: 'Agritech & Innovation',
+    readTime: '4 min read',
+    summary: '',
+    content: '',
+    author: 'Premier Agric Editorial Desk',
+    imageUrl: '',
+    highlightsText: '',
+    isPublished: true,
+  }
+  const [newsletterFormData, setNewsletterFormData] = useState(initialNewsletterState)
+  const [editingNewsletterId, setEditingNewsletterId] = useState(null)
+
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
@@ -129,10 +155,10 @@ export default function AdminPortalPage() {
         </p>
         {isSignedIn ? (
           <Link
-            href="/webinars"
+            href="/news"
             className="px-6 py-2 border border-white/10 text-white/60 hover:text-white transition-all text-sm font-mono tracking-wider"
           >
-            BACK TO WEBINARS
+            BACK TO NEWS
           </Link>
         ) : (
           <SignInButton mode="modal">
@@ -146,36 +172,133 @@ export default function AdminPortalPage() {
     )
   }
 
-  const handleSubmit = async (e) => {
+  // Handle Photo File Upload for Newsletter
+  const handlePhotoFileChange = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Photo is too large. Please upload an image under 5MB.')
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      setNewsletterFormData((prev) => ({
+        ...prev,
+        imageUrl: event.target?.result || '',
+      }))
+    }
+    reader.readAsDataURL(file)
+  }
+
+  // Submit Newsletter Form
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
     setErrorMessage('')
     setSuccessMessage('')
 
     try {
-      const parsedDate = new Date(formData.date).getTime()
+      const highlightsArray = newsletterFormData.highlightsText
+        ? newsletterFormData.highlightsText.split('\n').map((s) => s.trim()).filter(Boolean)
+        : []
+
+      const payload = {
+        title: newsletterFormData.title,
+        issue: newsletterFormData.issue,
+        category: newsletterFormData.category,
+        readTime: newsletterFormData.readTime,
+        summary: newsletterFormData.summary,
+        content: newsletterFormData.content,
+        author: newsletterFormData.author,
+        imageUrl: newsletterFormData.imageUrl || undefined,
+        highlights: highlightsArray.length > 0 ? highlightsArray : undefined,
+        isPublished: newsletterFormData.isPublished,
+      }
+
+      if (editingNewsletterId) {
+        await updateNewsletter({
+          id: editingNewsletterId,
+          ...payload,
+        })
+        setSuccessMessage('Newsletter updated successfully! Changes are live.')
+      } else {
+        await createNewsletter(payload)
+        setSuccessMessage('Newsletter created and published successfully!')
+      }
+
+      setNewsletterFormData(initialNewsletterState)
+      setEditingNewsletterId(null)
+    } catch (err) {
+      setErrorMessage(err.message || 'An error occurred while saving the newsletter.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleEditNewsletter = (item) => {
+    setEditingNewsletterId(item._id)
+    setNewsletterFormData({
+      title: item.title,
+      issue: item.issue,
+      category: item.category,
+      readTime: item.readTime,
+      summary: item.summary,
+      content: item.content,
+      author: item.author,
+      imageUrl: item.imageUrl || '',
+      highlightsText: item.highlights ? item.highlights.join('\n') : '',
+      isPublished: item.isPublished ?? true,
+    })
+    setSuccessMessage('')
+    setErrorMessage('')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleDeleteNewsletter = async (id, title) => {
+    if (confirm(`Are you sure you want to delete the newsletter "${title}"?`)) {
+      try {
+        await removeNewsletter({ id })
+        if (editingNewsletterId === id) {
+          setEditingNewsletterId(null)
+          setNewsletterFormData(initialNewsletterState)
+        }
+      } catch (err) {
+        alert('Failed to delete newsletter: ' + err.message)
+      }
+    }
+  }
+
+  // Submit Webinar Form
+  const handleWebinarSubmit = async (e) => {
+    e.preventDefault()
+    setSubmitting(true)
+    setErrorMessage('')
+    setSuccessMessage('')
+
+    try {
+      const parsedDate = new Date(webinarFormData.date).getTime()
       if (isNaN(parsedDate)) {
         throw new Error('Please select a valid date and time.')
       }
 
       const payload = {
-        title: formData.title,
-        description: formData.description,
+        title: webinarFormData.title,
+        description: webinarFormData.description,
         date: parsedDate,
-        duration: Number(formData.duration),
-        hostName: formData.hostName,
-        hostTitle: formData.hostTitle,
-        topic: formData.topic,
-        maxAttendees: formData.maxAttendees ? Number(formData.maxAttendees) : undefined,
-        imageUrl: formData.imageUrl || undefined,
-        meetingLink: formData.meetingLink || undefined,
+        duration: Number(webinarFormData.duration),
+        hostName: webinarFormData.hostName,
+        hostTitle: webinarFormData.hostTitle,
+        topic: webinarFormData.topic,
+        maxAttendees: webinarFormData.maxAttendees ? Number(webinarFormData.maxAttendees) : undefined,
+        imageUrl: webinarFormData.imageUrl || undefined,
+        meetingLink: webinarFormData.meetingLink || undefined,
       }
 
-      if (editingId) {
+      if (editingWebinarId) {
         await updateWebinar({
-          id: editingId,
+          id: editingWebinarId,
           ...payload,
-          isPublished: formData.isPublished,
+          isPublished: webinarFormData.isPublished,
         })
         setSuccessMessage('Webinar details updated successfully!')
       } else {
@@ -183,8 +306,8 @@ export default function AdminPortalPage() {
         setSuccessMessage('Webinar created successfully!')
       }
 
-      setFormData(initialFormState)
-      setEditingId(null)
+      setWebinarFormData(initialWebinarState)
+      setEditingWebinarId(null)
     } catch (err) {
       setErrorMessage(err.message || 'An error occurred while saving the webinar.')
     } finally {
@@ -192,9 +315,9 @@ export default function AdminPortalPage() {
     }
   }
 
-  const handleEdit = (webinar) => {
-    setEditingId(webinar._id)
-    setFormData({
+  const handleEditWebinar = (webinar) => {
+    setEditingWebinarId(webinar._id)
+    setWebinarFormData({
       title: webinar.title,
       description: webinar.description,
       date: timestampToDatetimeLocal(webinar.date),
@@ -212,13 +335,13 @@ export default function AdminPortalPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const handleDelete = async (id, title) => {
+  const handleDeleteWebinar = async (id, title) => {
     if (confirm(`Are you sure you want to delete the webinar "${title}"?`)) {
       try {
         await removeWebinar({ id })
-        if (editingId === id) {
-          setEditingId(initialFormState)
-          setEditingId(null)
+        if (editingWebinarId === id) {
+          setEditingWebinarId(null)
+          setWebinarFormData(initialWebinarState)
         }
       } catch (err) {
         alert('Failed to delete webinar: ' + err.message)
@@ -233,13 +356,6 @@ export default function AdminPortalPage() {
     setTimeout(() => setCopiedId(null), 2000)
   }
 
-  const handleCancelEdit = () => {
-    setEditingId(null)
-    setFormData(initialFormState)
-    setSuccessMessage('')
-    setErrorMessage('')
-  }
-
   const upcomingWebinars =
     webinars?.filter((w) => w.date + w.duration * 60 * 1000 >= Date.now()) ?? []
   const pastWebinars =
@@ -247,393 +363,675 @@ export default function AdminPortalPage() {
 
   return (
     <div className="bg-[#061b0e] min-h-screen text-white pt-24 pb-16">
-      {/* Header */}
+      {/* Header & Tabs */}
       <div className="border-b border-white/10 pb-6 px-6 md:px-8 mb-10">
-        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
             <span className="eyebrow text-[var(--gold)]">SYSTEM CONSOLE</span>
             <h1 className="font-display text-3xl md:text-4xl leading-tight mt-1">
-              Webinar Administration
+              Admin Portal
             </h1>
           </div>
-          <div className="flex gap-4">
+          
+          <div className="flex items-center gap-3">
             <Link
-              href="/webinars"
-              className="editorial-link text-white/50 hover:text-white text-xs font-mono tracking-widest transition-colors self-center"
+              href="/news"
+              className="px-4 py-2 border border-white/10 text-white/60 hover:text-white text-xs font-mono tracking-wider transition-colors"
             >
-              ← VIEW PUBLIC PORTAL
+              ← VIEW NEWS PAGE
+            </Link>
+            <Link
+              href="/newsletters"
+              className="px-4 py-2 border border-[var(--gold)]/40 text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--forest)] text-xs font-mono tracking-wider transition-colors"
+            >
+              VIEW NEWSLETTERS
             </Link>
           </div>
         </div>
+
+        {/* Tab Switcher */}
+        <div className="mx-auto max-w-7xl mt-8 flex border-b border-white/10 gap-8">
+          <button
+            onClick={() => {
+              setActiveTab('newsletters')
+              setSuccessMessage('')
+              setErrorMessage('')
+            }}
+            className={`pb-4 text-sm font-mono tracking-wider uppercase flex items-center gap-2 border-b-2 transition-colors ${
+              activeTab === 'newsletters'
+                ? 'border-[var(--gold)] text-[var(--gold)] font-semibold'
+                : 'border-transparent text-white/40 hover:text-white'
+            }`}
+          >
+            <Newspaper className="w-4 h-4" />
+            Upload Newsletters ({newsletters ? newsletters.length : 0})
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab('webinars')
+              setSuccessMessage('')
+              setErrorMessage('')
+            }}
+            className={`pb-4 text-sm font-mono tracking-wider uppercase flex items-center gap-2 border-b-2 transition-colors ${
+              activeTab === 'webinars'
+                ? 'border-[var(--gold)] text-[var(--gold)] font-semibold'
+                : 'border-transparent text-white/40 hover:text-white'
+            }`}
+          >
+            <Video className="w-4 h-4" />
+            Manage Webinars ({webinars ? webinars.length : 0})
+          </button>
+        </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Form Column */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8">
-            <p className="eyebrow text-[var(--gold)] mb-4">
-              {editingId ? 'Edit Session' : 'Create New Session'}
-            </p>
-
-            {successMessage && (
-              <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-4 mb-6 text-sm font-mono">
-                {successMessage}
-              </div>
-            )}
-
-            {errorMessage && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 mb-6 text-sm font-mono">
-                {errorMessage}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                  Webinar Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. Precision Drone Mapping in Agribusiness"
-                  className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                  Description
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Describe the topics covered and what attendees will learn..."
-                  className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors resize-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                    Date & Time
-                  </label>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors [color-scheme:dark]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                    Duration (Min)
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min={1}
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                    Host Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.hostName}
-                    onChange={(e) => setFormData({ ...formData, hostName: e.target.value })}
-                    placeholder="e.g. Dr. Silas Gumbi"
-                    className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                    Host Title
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.hostTitle}
-                    onChange={(e) => setFormData({ ...formData, hostTitle: e.target.value })}
-                    placeholder="e.g. Agronomist & Drone Pilot"
-                    className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                    Topic Category
-                  </label>
-                  <select
-                    value={formData.topic}
-                    onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                  >
-                    <option value="Agribusiness" className="bg-[#061b0e]">Agribusiness</option>
-                    <option value="Drone Mapping" className="bg-[#061b0e]">Drone Mapping</option>
-                    <option value="Data & Analytics" className="bg-[#061b0e]">Data & Analytics</option>
-                    <option value="Sustainability" className="bg-[#061b0e]">Sustainability</option>
-                    <option value="Finance" className="bg-[#061b0e]">Finance</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                    Max Capacity (Opt)
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    placeholder="Unlimited"
-                    value={formData.maxAttendees}
-                    onChange={(e) => setFormData({ ...formData, maxAttendees: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                  Meeting Link (Optional Zoom/Teams/Meet)
-                </label>
-                <input
-                  type="url"
-                  value={formData.meetingLink}
-                  onChange={(e) => setFormData({ ...formData, meetingLink: e.target.value })}
-                  placeholder="If empty, built-in Jitsi Room is used"
-                  className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
-                  Image URL (Optional)
-                </label>
-                <input
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  placeholder="https://example.com/banner.jpg"
-                  className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
-                />
-              </div>
-
-              {editingId && (
-                <div className="flex items-center gap-3 pt-2">
-                  <input
-                    type="checkbox"
-                    id="isPublished"
-                    checked={formData.isPublished}
-                    onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
-                    className="w-4 h-4 accent-[var(--gold)] rounded"
-                  />
-                  <label htmlFor="isPublished" className="text-sm font-mono text-white/70 cursor-pointer">
-                    Publish immediately
-                  </label>
-                </div>
-              )}
-
-              <div className="flex gap-4 pt-4 border-t border-white/10">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-1 py-3 font-mono text-xs tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all font-semibold disabled:opacity-50"
-                >
-                  {submitting ? 'SAVING…' : editingId ? 'UPDATE WEBINAR' : 'CREATE WEBINAR'}
-                </button>
-                {editingId && (
-                  <button
-                    type="button"
-                    onClick={handleCancelEdit}
-                    className="px-4 py-3 font-mono text-xs tracking-widest uppercase border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-all"
-                  >
-                    CANCEL
-                  </button>
-                )}
-              </div>
-            </form>
+      <div className="mx-auto max-w-7xl px-6 md:px-8">
+        {/* Success / Error Banners */}
+        {successMessage && (
+          <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-4 mb-8 text-sm font-mono flex items-center gap-2">
+            <Check className="w-4 h-4 shrink-0" />
+            <span>{successMessage}</span>
           </div>
-        </div>
+        )}
 
-        {/* List Column */}
-        <div className="lg:col-span-7 flex flex-col gap-8">
-          {webinars === undefined ? (
-            <div className="space-y-4">
-              {[1, 2].map((i) => (
-                <div key={i} className="h-44 border border-white/10 bg-white/5 animate-pulse" />
-              ))}
-            </div>
-          ) : webinars.length === 0 ? (
-            <div className="border border-white/10 bg-white/5 p-12 text-center flex flex-col items-center gap-4">
-              <div className="w-12 h-px bg-[var(--gold)]" />
-              <p className="text-white/40 font-mono text-sm">No webinars found in database.</p>
-              <div className="w-12 h-px bg-[var(--gold)]" />
-            </div>
-          ) : (
-            <div className="space-y-8">
-              {/* Upcoming Webinars */}
-              {upcomingWebinars.length > 0 && (
-                <div>
-                  <p className="eyebrow text-[var(--gold)] mb-4">Upcoming Webinars ({upcomingWebinars.length})</p>
-                  <div className="space-y-4">
-                    {upcomingWebinars.map((w) => (
-                      <div
-                        key={w._id}
-                        className="border border-white/10 bg-white/5 p-5 transition-all hover:bg-white/8"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <span className="inline-block text-[10px] font-mono border border-[var(--gold)]/30 text-[var(--gold)] px-2 py-0.5 uppercase tracking-widest mb-2">
-                              {w.topic}
-                            </span>
-                            <h3 className="font-display text-lg text-white font-medium">{w.title}</h3>
-                            <p className="text-xs text-white/50 font-mono mt-1">
-                              {formatDate(w.date)} @ {formatTime(w.date)} SAST ({w.duration} mins)
-                            </p>
-                            <p className="text-xs text-white/40 mt-1 font-mono">
-                              Host: {w.hostName} ({w.hostTitle})
-                            </p>
-                            {w.meetingLink && (
-                              <p className="text-[10px] text-emerald-400 font-mono mt-1 select-all">
-                                Custom Link: {w.meetingLink}
-                              </p>
-                            )}
-                          </div>
-                          <div className="flex flex-col items-end gap-2 shrink-0">
-                            <span className="text-xs font-mono text-[var(--gold)] bg-[var(--gold)]/10 px-2 py-1">
-                              {!w.isPublished ? 'DRAFT' : 'ACTIVE'}
-                            </span>
-                          </div>
-                        </div>
+        {errorMessage && (
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 mb-8 text-sm font-mono">
+            {errorMessage}
+          </div>
+        )}
 
-                        <div className="flex flex-wrap gap-2.5 mt-4 pt-3 border-t border-white/5">
-                          <button
-                            onClick={() => handleCopyLink(w._id)}
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all flex items-center gap-1.5 text-white/70 hover:text-white"
-                          >
-                            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
-                            </svg>
-                            {copiedId === w._id ? 'Copied!' : 'Copy Share Link'}
-                          </button>
-                          <button
-                            onClick={() => handleEdit(w)}
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-blue-500/40 hover:bg-white/5 transition-all text-white/70 hover:text-white"
-                          >
-                            Edit Details
-                          </button>
-                          <button
-                            onClick={() => handleDelete(w._id, w.title)}
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-red-500/40 hover:bg-white/5 transition-all text-white/70 hover:text-red-400"
-                          >
-                            Delete
-                          </button>
-                          <button
-                            onClick={() =>
-                              setExpandedAttendeesId(
-                                expandedAttendeesId === w._id ? null : w._id
-                              )
-                            }
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all text-white/70 hover:text-white ml-auto"
-                          >
-                            {expandedAttendeesId === w._id ? 'Hide Attendees' : 'View Attendees'}
-                          </button>
-                        </div>
-
-                        {expandedAttendeesId === w._id && (
-                          <WebinarRegistrations webinarId={w._id} />
-                        )}
-                      </div>
-                    ))}
-                  </div>
+        {/* TAB 1: NEWSLETTERS MANAGEMENT */}
+        {activeTab === 'newsletters' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Newsletter Upload Form */}
+            <div className="lg:col-span-6 flex flex-col gap-6">
+              <div className="border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="eyebrow text-[var(--gold)] flex items-center gap-2">
+                    <Plus className="w-4 h-4 text-[var(--gold)]" />
+                    {editingNewsletterId ? 'Edit Newsletter Issue' : 'Upload New Newsletter'}
+                  </p>
+                  {editingNewsletterId && (
+                    <span className="text-xs font-mono text-[var(--gold)] border border-[var(--gold)]/30 px-2 py-0.5">
+                      EDITING MODE
+                    </span>
+                  )}
                 </div>
-              )}
 
-              {/* Past Webinars */}
-              {pastWebinars.length > 0 && (
-                <div>
-                  <p className="eyebrow text-white/30 mb-4">Past Sessions ({pastWebinars.length})</p>
-                  <div className="space-y-4 opacity-75 hover:opacity-100 transition-opacity">
-                    {pastWebinars.map((w) => (
-                      <div
-                        key={w._id}
-                        className="border border-white/10 bg-white/5 p-5 transition-all"
+                <form onSubmit={handleNewsletterSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                      Newsletter Title *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={newsletterFormData.title}
+                      onChange={(e) => setNewsletterFormData({ ...newsletterFormData, title: e.target.value })}
+                      placeholder="e.g. Precision Farming & Drone Telemetry Benchmarks"
+                      className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Issue / Edition *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={newsletterFormData.issue}
+                        onChange={(e) => setNewsletterFormData({ ...newsletterFormData, issue: e.target.value })}
+                        placeholder="e.g. Issue #09"
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Category *
+                      </label>
+                      <select
+                        value={newsletterFormData.category}
+                        onChange={(e) => setNewsletterFormData({ ...newsletterFormData, category: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
                       >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <span className="inline-block text-[10px] font-mono border border-white/20 text-white/40 px-2 py-0.5 uppercase tracking-widest mb-2">
-                              {w.topic}
-                            </span>
-                            <h3 className="font-display text-lg text-white/60 font-medium">{w.title}</h3>
-                            <p className="text-xs text-white/40 font-mono mt-1">
-                              {formatDate(w.date)} @ {formatTime(w.date)} SAST ({w.duration} mins)
-                            </p>
-                          </div>
-                          <div className="shrink-0">
-                            <span className="text-[10px] font-mono text-white/30 border border-white/10 px-2 py-1">
-                              ENDED
-                            </span>
-                          </div>
-                        </div>
+                        <option value="Agritech & Innovation" className="bg-[#061b0e]">Agritech & Innovation</option>
+                        <option value="Soil & Climate Resilience" className="bg-[#061b0e]">Soil & Climate Resilience</option>
+                        <option value="Community Impact" className="bg-[#061b0e]">Community Impact</option>
+                        <option value="Finance & Growth" className="bg-[#061b0e]">Finance & Growth</option>
+                        <option value="General News" className="bg-[#061b0e]">General News</option>
+                      </select>
+                    </div>
+                  </div>
 
-                        <div className="flex flex-wrap gap-2.5 mt-4 pt-3 border-t border-white/5">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Author Name
+                      </label>
+                      <input
+                        type="text"
+                        value={newsletterFormData.author}
+                        onChange={(e) => setNewsletterFormData({ ...newsletterFormData, author: e.target.value })}
+                        placeholder="Premier Agric Desk"
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Estimated Read Time
+                      </label>
+                      <input
+                        type="text"
+                        value={newsletterFormData.readTime}
+                        onChange={(e) => setNewsletterFormData({ ...newsletterFormData, readTime: e.target.value })}
+                        placeholder="e.g. 4 min read"
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                      Short Summary / Teaser Excerpt *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      value={newsletterFormData.summary}
+                      onChange={(e) => setNewsletterFormData({ ...newsletterFormData, summary: e.target.value })}
+                      placeholder="Write a compelling 2-3 sentence teaser shown on the newsletter cards..."
+                      className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                      Full Article Body *
+                    </label>
+                    <textarea
+                      required
+                      rows={8}
+                      value={newsletterFormData.content}
+                      onChange={(e) => setNewsletterFormData({ ...newsletterFormData, content: e.target.value })}
+                      placeholder="Write the full newsletter text, sections, and details..."
+                      className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors font-sans"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                      Key Highlights (1 per line)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={newsletterFormData.highlightsText}
+                      onChange={(e) => setNewsletterFormData({ ...newsletterFormData, highlightsText: e.target.value })}
+                      placeholder="22% cost reduction in fertilizer&#10;14% increase in crop yield&#10;Multispectral scanning active"
+                      className="w-full bg-white/5 border border-white/10 p-3 text-xs font-mono text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                    />
+                  </div>
+
+                  {/* Photo Upload Section */}
+                  <div className="border border-dashed border-white/20 p-4 rounded-sm bg-white/5">
+                    <label className="block text-xs font-mono text-[var(--gold)] uppercase mb-2 flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5" />
+                      Attach Newsletter Photo
+                    </label>
+                    
+                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                      <label className="cursor-pointer px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-mono uppercase tracking-wider text-white flex items-center gap-2 transition-all shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
+                        Choose Photo File
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handlePhotoFileChange}
+                          className="hidden"
+                        />
+                      </label>
+                      <span className="text-xs text-white/30 font-mono">or enter Image URL below</span>
+                    </div>
+
+                    <input
+                      type="url"
+                      value={newsletterFormData.imageUrl}
+                      onChange={(e) => setNewsletterFormData({ ...newsletterFormData, imageUrl: e.target.value })}
+                      placeholder="https://images.unsplash.com/photo-..."
+                      className="mt-3 w-full bg-white/5 border border-white/10 p-2.5 text-xs font-mono text-white focus:outline-none focus:border-[var(--gold)]"
+                    />
+
+                    {newsletterFormData.imageUrl && (
+                      <div className="mt-3 relative w-full h-32 border border-white/20 rounded-sm overflow-hidden bg-black/40">
+                        <img
+                          src={newsletterFormData.imageUrl}
+                          alt="Uploaded photo preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setNewsletterFormData((prev) => ({ ...prev, imageUrl: '' }))}
+                          className="absolute top-2 right-2 px-2 py-1 bg-red-600/80 hover:bg-red-600 text-white text-[10px] font-mono"
+                        >
+                          Remove Photo
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-2">
+                    <input
+                      type="checkbox"
+                      id="newsletterPublished"
+                      checked={newsletterFormData.isPublished}
+                      onChange={(e) => setNewsletterFormData({ ...newsletterFormData, isPublished: e.target.checked })}
+                      className="w-4 h-4 accent-[var(--gold)] rounded"
+                    />
+                    <label htmlFor="newsletterPublished" className="text-sm font-mono text-white/70 cursor-pointer">
+                      Publish immediately on website
+                    </label>
+                  </div>
+
+                  <div className="flex gap-4 pt-4 border-t border-white/10">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="flex-1 py-3 font-mono text-xs tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all font-semibold disabled:opacity-50"
+                    >
+                      {submitting ? 'SAVING…' : editingNewsletterId ? 'UPDATE NEWSLETTER' : 'UPLOAD NEWSLETTER'}
+                    </button>
+                    {editingNewsletterId && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingNewsletterId(null)
+                          setNewsletterFormData(initialNewsletterState)
+                        }}
+                        className="px-4 py-3 font-mono text-xs tracking-widest uppercase border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-all"
+                      >
+                        CANCEL
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* Newsletter List */}
+            <div className="lg:col-span-6 flex flex-col gap-6">
+              <div className="flex items-center justify-between">
+                <p className="eyebrow text-[var(--gold)]">
+                  Published & Saved Newsletters ({newsletters ? newsletters.length : 0})
+                </p>
+                <Link
+                  href="/newsletters"
+                  target="_blank"
+                  className="text-xs font-mono text-white/40 hover:text-[var(--gold)]"
+                >
+                  View Public Archive ↗
+                </Link>
+              </div>
+
+              {newsletters === undefined ? (
+                <div className="space-y-4">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="h-32 border border-white/10 bg-white/5 animate-pulse" />
+                  ))}
+                </div>
+              ) : newsletters.length === 0 ? (
+                <div className="border border-white/10 bg-white/5 p-12 text-center flex flex-col items-center gap-4">
+                  <Newspaper className="w-8 h-8 text-white/20" />
+                  <p className="text-white/40 font-mono text-sm">No uploaded newsletters yet.</p>
+                  <p className="text-white/30 text-xs">Fill out the form on the left to upload your first newsletter photo and text.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {newsletters.map((item) => (
+                    <div
+                      key={item._id}
+                      className="border border-white/10 bg-white/5 p-5 transition-all hover:bg-white/8 rounded-sm"
+                    >
+                      {item.imageUrl && (
+                        <div className="w-full h-32 mb-4 overflow-hidden border border-white/10 rounded-sm">
+                          <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                        </div>
+                      )}
+
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-[10px] font-mono border border-[var(--gold)]/30 text-[var(--gold)] px-2 py-0.5 uppercase tracking-wider">
+                              {item.category}
+                            </span>
+                            <span className="text-[10px] font-mono text-white/40">
+                              {item.issue} · {item.readTime}
+                            </span>
+                          </div>
+                          <h3 className="font-display text-lg text-white font-medium leading-snug">{item.title}</h3>
+                          <p className="text-xs text-white/50 line-clamp-2 mt-2">{item.summary}</p>
+                        </div>
+                        
+                        <span className={`text-[10px] font-mono px-2 py-1 shrink-0 ${item.isPublished ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}`}>
+                          {item.isPublished ? 'PUBLISHED' : 'DRAFT'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5 text-xs font-mono">
+                        <span className="text-white/30">Uploaded by {item.author}</span>
+                        <div className="flex gap-2">
                           <button
-                            onClick={() => handleCopyLink(w._id)}
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all flex items-center gap-1.5 text-white/70 hover:text-white"
-                          >
-                            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
-                            </svg>
-                            {copiedId === w._id ? 'Copied!' : 'Copy Share Link'}
-                          </button>
-                          <button
-                            onClick={() => handleEdit(w)}
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-blue-500/40 hover:bg-white/5 transition-all text-white/70 hover:text-white"
+                            onClick={() => handleEditNewsletter(item)}
+                            className="px-3 py-1 border border-white/10 hover:border-blue-500/40 text-white/70 hover:text-white"
                           >
                             Edit
                           </button>
                           <button
-                            onClick={() => handleDelete(w._id, w.title)}
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-red-500/40 hover:bg-white/5 transition-all text-white/70 hover:text-red-400"
+                            onClick={() => handleDeleteNewsletter(item._id, item.title)}
+                            className="px-3 py-1 border border-white/10 hover:border-red-500/40 text-white/70 hover:text-red-400"
                           >
                             Delete
                           </button>
-                          <button
-                            onClick={() =>
-                              setExpandedAttendeesId(
-                                expandedAttendeesId === w._id ? null : w._id
-                              )
-                            }
-                            className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all text-white/70 hover:text-white ml-auto"
-                          >
-                            {expandedAttendeesId === w._id ? 'Hide Attendees' : 'View Attendees'}
-                          </button>
                         </div>
-
-                        {expandedAttendeesId === w._id && (
-                          <WebinarRegistrations webinarId={w._id} />
-                        )}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* TAB 2: WEBINARS MANAGEMENT */}
+        {activeTab === 'webinars' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Webinar Form Column */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              <div className="border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8">
+                <p className="eyebrow text-[var(--gold)] mb-4">
+                  {editingWebinarId ? 'Edit Session' : 'Create New Webinar Session'}
+                </p>
+
+                <form onSubmit={handleWebinarSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                      Webinar Title
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={webinarFormData.title}
+                      onChange={(e) => setWebinarFormData({ ...webinarFormData, title: e.target.value })}
+                      placeholder="e.g. Precision Drone Mapping in Agribusiness"
+                      className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                      Description
+                    </label>
+                    <textarea
+                      required
+                      rows={4}
+                      value={webinarFormData.description}
+                      onChange={(e) => setWebinarFormData({ ...webinarFormData, description: e.target.value })}
+                      placeholder="Describe the topics covered..."
+                      className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors resize-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Date & Time
+                      </label>
+                      <input
+                        type="datetime-local"
+                        required
+                        value={webinarFormData.date}
+                        onChange={(e) => setWebinarFormData({ ...webinarFormData, date: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors [color-scheme:dark]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Duration (Min)
+                      </label>
+                      <input
+                        type="number"
+                        required
+                        min={1}
+                        value={webinarFormData.duration}
+                        onChange={(e) => setWebinarFormData({ ...webinarFormData, duration: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Host Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={webinarFormData.hostName}
+                        onChange={(e) => setWebinarFormData({ ...webinarFormData, hostName: e.target.value })}
+                        placeholder="e.g. Dr. Silas Gumbi"
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Host Title
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={webinarFormData.hostTitle}
+                        onChange={(e) => setWebinarFormData({ ...webinarFormData, hostTitle: e.target.value })}
+                        placeholder="e.g. Agronomist & Pilot"
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Topic Category
+                      </label>
+                      <select
+                        value={webinarFormData.topic}
+                        onChange={(e) => setWebinarFormData({ ...webinarFormData, topic: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      >
+                        <option value="Agribusiness" className="bg-[#061b0e]">Agribusiness</option>
+                        <option value="Drone Mapping" className="bg-[#061b0e]">Drone Mapping</option>
+                        <option value="Data & Analytics" className="bg-[#061b0e]">Data & Analytics</option>
+                        <option value="Sustainability" className="bg-[#061b0e]">Sustainability</option>
+                        <option value="Finance" className="bg-[#061b0e]">Finance</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                        Max Capacity (Opt)
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        placeholder="Unlimited"
+                        value={webinarFormData.maxAttendees}
+                        onChange={(e) => setWebinarFormData({ ...webinarFormData, maxAttendees: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-2">
+                    <input
+                      type="checkbox"
+                      id="isPublishedWebinar"
+                      checked={webinarFormData.isPublished}
+                      onChange={(e) => setWebinarFormData({ ...webinarFormData, isPublished: e.target.checked })}
+                      className="w-4 h-4 accent-[var(--gold)] rounded"
+                    />
+                    <label htmlFor="isPublishedWebinar" className="text-sm font-mono text-white/70 cursor-pointer">
+                      Publish immediately
+                    </label>
+                  </div>
+
+                  <div className="flex gap-4 pt-4 border-t border-white/10">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="flex-1 py-3 font-mono text-xs tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all font-semibold disabled:opacity-50"
+                    >
+                      {submitting ? 'SAVING…' : editingWebinarId ? 'UPDATE WEBINAR' : 'CREATE WEBINAR'}
+                    </button>
+                    {editingWebinarId && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingWebinarId(null)
+                          setWebinarFormData(initialWebinarState)
+                        }}
+                        className="px-4 py-3 font-mono text-xs tracking-widest uppercase border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-all"
+                      >
+                        CANCEL
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* Webinar List Column */}
+            <div className="lg:col-span-7 flex flex-col gap-8">
+              {webinars === undefined ? (
+                <div className="space-y-4">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="h-44 border border-white/10 bg-white/5 animate-pulse" />
+                  ))}
+                </div>
+              ) : webinars.length === 0 ? (
+                <div className="border border-white/10 bg-white/5 p-12 text-center flex flex-col items-center gap-4">
+                  <Video className="w-8 h-8 text-white/20" />
+                  <p className="text-white/40 font-mono text-sm">No webinars found in database.</p>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  {upcomingWebinars.length > 0 && (
+                    <div>
+                      <p className="eyebrow text-[var(--gold)] mb-4">Upcoming Webinars ({upcomingWebinars.length})</p>
+                      <div className="space-y-4">
+                        {upcomingWebinars.map((w) => (
+                          <div
+                            key={w._id}
+                            className="border border-white/10 bg-white/5 p-5 transition-all hover:bg-white/8"
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <span className="inline-block text-[10px] font-mono border border-[var(--gold)]/30 text-[var(--gold)] px-2 py-0.5 uppercase tracking-widest mb-2">
+                                  {w.topic}
+                                </span>
+                                <h3 className="font-display text-lg text-white font-medium">{w.title}</h3>
+                                <p className="text-xs text-white/50 font-mono mt-1">
+                                  {formatDate(w.date)} @ {formatTime(w.date)} SAST ({w.duration} mins)
+                                </p>
+                              </div>
+                              <span className="text-xs font-mono text-[var(--gold)] bg-[var(--gold)]/10 px-2 py-1">
+                                {!w.isPublished ? 'DRAFT' : 'ACTIVE'}
+                              </span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2.5 mt-4 pt-3 border-t border-white/5">
+                              <button
+                                onClick={() => handleCopyLink(w._id)}
+                                className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all flex items-center gap-1.5 text-white/70 hover:text-white"
+                              >
+                                {copiedId === w._id ? 'Copied!' : 'Copy Share Link'}
+                              </button>
+                              <button
+                                onClick={() => handleEditWebinar(w)}
+                                className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-blue-500/40 hover:bg-white/5 transition-all text-white/70 hover:text-white"
+                              >
+                                Edit Details
+                              </button>
+                              <button
+                                onClick={() => handleDeleteWebinar(w._id, w.title)}
+                                className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-red-500/40 hover:bg-white/5 transition-all text-white/70 hover:text-red-400"
+                              >
+                                Delete
+                              </button>
+                              <button
+                                onClick={() =>
+                                  setExpandedAttendeesId(
+                                    expandedAttendeesId === w._id ? null : w._id
+                                  )
+                                }
+                                className="text-xs font-mono py-1.5 px-3 border border-white/10 hover:border-[var(--gold)]/40 hover:bg-white/5 transition-all text-white/70 hover:text-white ml-auto"
+                              >
+                                {expandedAttendeesId === w._id ? 'Hide Attendees' : 'View Attendees'}
+                              </button>
+                            </div>
+
+                            {expandedAttendeesId === w._id && (
+                              <WebinarRegistrations webinarId={w._id} />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {pastWebinars.length > 0 && (
+                    <div>
+                      <p className="eyebrow text-white/30 mb-4">Past Sessions ({pastWebinars.length})</p>
+                      <div className="space-y-4 opacity-75 hover:opacity-100 transition-opacity">
+                        {pastWebinars.map((w) => (
+                          <div
+                            key={w._id}
+                            className="border border-white/10 bg-white/5 p-5 transition-all"
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <span className="inline-block text-[10px] font-mono border border-white/20 text-white/40 px-2 py-0.5 uppercase tracking-widest mb-2">
+                                  {w.topic}
+                                </span>
+                                <h3 className="font-display text-lg text-white/60 font-medium">{w.title}</h3>
+                              </div>
+                              <span className="text-[10px] font-mono text-white/30 border border-white/10 px-2 py-1">
+                                ENDED
+                              </span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2.5 mt-4 pt-3 border-t border-white/5">
+                              <button
+                                onClick={() => handleEditWebinar(w)}
+                                className="text-xs font-mono py-1.5 px-3 border border-white/10 text-white/70 hover:text-white"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteWebinar(w._id, w.title)}
+                                className="text-xs font-mono py-1.5 px-3 border border-white/10 text-white/70 hover:text-red-400"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -43,6 +43,8 @@ export default function Footer() {
     { name: 'About', href: '/about' },
     { name: 'Services', href: '/services' },
     { name: 'Portfolio', href: '/portfolio' },
+    { name: 'News & Insights', href: '/news' },
+    { name: 'Webinars', href: '/webinars' },
     { name: 'Contact', href: '/contact' },
   ]
 

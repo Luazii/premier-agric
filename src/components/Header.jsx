@@ -38,7 +38,7 @@ export default function Header() {
     { name: 'About', href: '/about' },
     { name: 'Services', href: '/services' },
     { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Webinars', href: '/webinars' },
+    { name: 'NEWS', href: '/news' },
     ...(isAdmin ? [{ name: 'Admin Portal', href: '/admin' }] : []),
     { name: 'Contact', href: '/contact' },
   ]
