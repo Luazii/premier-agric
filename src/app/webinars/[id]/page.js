@@ -55,13 +55,20 @@ export default function WebinarRoomPage() {
   }
 
   const registered = isRegistered || justRegistered
-  const email = user?.primaryEmailAddress?.emailAddress
+  const userEmails = (user?.emailAddresses || []).map((e) => e.emailAddress?.toLowerCase()).filter(Boolean)
+  if (user?.primaryEmailAddress?.emailAddress) {
+    userEmails.push(user.primaryEmailAddress.emailAddress.toLowerCase())
+  }
+
   const isAdmin =
     isSignedIn &&
-    (user.publicMetadata?.role === 'admin' ||
-      email === 'lgumbi2169@gmail.com' ||
-      email === 'support@premieragric.co.za' ||
-      email?.endsWith('@premieragric.co.za'))
+    (user?.publicMetadata?.role === 'admin' ||
+      userEmails.some(
+        (e) =>
+          e === 'support@premieragric.co.za' ||
+          e === 'lgumbi2169@gmail.com' ||
+          e.endsWith('@premieragric.co.za')
+      ))
 
   const now = Date.now()
   const startTime = webinar ? webinar.date - 10 * 60 * 1000 : 0

@@ -21,7 +21,7 @@ export const get = query({
     let canAccessMeeting = false
 
     if (identity) {
-      const email = identity.email
+      const email = identity.email ? identity.email.toLowerCase() : ''
       const isAdmin = !!email && (
         email === 'lgumbi2169@gmail.com' ||
         email === 'support@premieragric.co.za' ||
