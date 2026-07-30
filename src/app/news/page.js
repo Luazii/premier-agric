@@ -42,9 +42,8 @@ export default function NewsPage() {
     setNow(Date.now())
   }, [])
 
-  // Safely fetch published newsletters from Convex
-  const listPublishedQuery = api?.newsletters?.listPublished ? api.newsletters.listPublished : 'skip'
-  const convexNewsletters = useQuery(listPublishedQuery)
+  // Fetch published newsletters from Convex
+  const convexNewsletters = useQuery(api.newsletters.listPublished)
   
   // Combine Convex newsletters (admin uploaded) with initial static newsletters safely
   const allNewsletters = Array.isArray(convexNewsletters)
@@ -54,9 +53,8 @@ export default function NewsPage() {
   // Top 3 featured newsletters
   const featuredNewsletters = allNewsletters.slice(0, 3)
 
-  // Safely fetch webinars from Convex
-  const webinarsQuery = api?.webinars?.list ? api.webinars.list : 'skip'
-  const webinars = useQuery(webinarsQuery)
+  // Fetch webinars from Convex
+  const webinars = useQuery(api.webinars.list)
   
   const upcomingWebinars = Array.isArray(webinars)
     ? webinars.filter((w) => (now ? w.date + w.duration * 60 * 1000 >= now : true))

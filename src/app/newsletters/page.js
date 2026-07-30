@@ -27,9 +27,8 @@ function NewslettersContent() {
   const searchParams = useSearchParams()
   const initialId = searchParams?.get('id')
 
-  // Safely fetch live published newsletters from Convex
-  const listPublishedQuery = api?.newsletters?.listPublished ? api.newsletters.listPublished : 'skip'
-  const convexNewsletters = useQuery(listPublishedQuery)
+  // Fetch live published newsletters from Convex
+  const convexNewsletters = useQuery(api.newsletters.listPublished)
 
   const allNewsletters = Array.isArray(convexNewsletters)
     ? [...convexNewsletters, ...INITIAL_NEWSLETTERS]
