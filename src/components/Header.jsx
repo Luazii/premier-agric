@@ -61,7 +61,9 @@ export default function Header() {
   return (
     <>
       <header
-        className="fixed left-0 right-0 top-0 z-[60] transition-all duration-500 bg-transparent"
+        className={`fixed left-0 right-0 top-0 z-[60] transition-all duration-500 ${
+          isSolid ? 'bg-[#061b0e]/85 backdrop-blur-md border-b border-white/10 shadow-lg' : 'bg-transparent'
+        }`}
       >
         <div className="relative z-[70] mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:h-24 md:px-8">
           <Link href="/" className="flex items-center gap-3">
@@ -94,9 +96,7 @@ export default function Header() {
             ) : (
               <SignInButton mode="modal">
                 <button
-                  className={`editorial-link text-sm ${
-                    isMenuOpen ? 'text-white' : isSolid ? 'text-[var(--forest)]' : 'text-white'
-                  }`}
+                  className="editorial-link text-sm text-white hover:text-[var(--gold)] transition-colors duration-200"
                   type="button"
                 >
                   SIGN IN
@@ -105,9 +105,7 @@ export default function Header() {
             )}
             <button
               onClick={() => setIsMenuOpen((open) => !open)}
-              className={`editorial-link ${
-                isMenuOpen ? 'text-white' : isSolid ? 'text-[var(--forest)]' : 'text-white'
-              }`}
+              className="editorial-link text-sm font-semibold tracking-wider text-white hover:text-[var(--gold)] transition-colors duration-200"
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               type="button"
             >
