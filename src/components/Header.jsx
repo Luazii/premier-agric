@@ -17,13 +17,13 @@ export default function Header() {
     userEmails.push(user.primaryEmailAddress.emailAddress.toLowerCase())
   }
 
+  const ALLOWED_ADMINS = ['lgumbi2169@gmail.com', 'support@premieragric.co.za', 'premieragric1@gmail.com']
   const isAdmin =
     isSignedIn &&
     (user?.publicMetadata?.role === 'admin' ||
       userEmails.some(
         (e) =>
-          e === 'support@premieragric.co.za' ||
-          e === 'lgumbi2169@gmail.com' ||
+          ALLOWED_ADMINS.includes(e) ||
           e.endsWith('@premieragric.co.za')
       ))
 

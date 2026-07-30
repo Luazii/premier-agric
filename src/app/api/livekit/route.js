@@ -44,13 +44,13 @@ export async function GET(request) {
       userEmails.push(user.primaryEmailAddress.emailAddress.toLowerCase());
     }
     const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase()) : [];
+    const ALLOWED_ADMINS = ['lgumbi2169@gmail.com', 'support@premieragric.co.za', 'premieragric1@gmail.com'];
     const isAdmin =
       user?.publicMetadata?.role === 'admin' ||
       userEmails.some(
         (e) =>
           adminEmails.includes(e) ||
-          e === 'support@premieragric.co.za' ||
-          e === 'lgumbi2169@gmail.com' ||
+          ALLOWED_ADMINS.includes(e) ||
           e.endsWith('@premieragric.co.za')
       );
 

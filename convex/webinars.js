@@ -22,9 +22,9 @@ export const get = query({
 
     if (identity) {
       const email = identity.email ? identity.email.toLowerCase() : ''
+      const ALLOWED_ADMINS = ['lgumbi2169@gmail.com', 'support@premieragric.co.za', 'premieragric1@gmail.com']
       const isAdmin = !!email && (
-        email === 'lgumbi2169@gmail.com' ||
-        email === 'support@premieragric.co.za' ||
+        ALLOWED_ADMINS.includes(email) ||
         email.endsWith('@premieragric.co.za')
       )
 

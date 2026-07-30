@@ -9,7 +9,8 @@ import { Newspaper, Video, Upload, Image as ImageIcon, Check, Trash2, Edit, Plus
 
 // Sub-component to display registrations in a real-time reactive drawer/list
 function WebinarRegistrations({ webinarId }) {
-  const registrations = useQuery(api.registrations.listByWebinar, { webinarId })
+  const registrationsQuery = api?.registrations?.listByWebinar ? api.registrations.listByWebinar : 'skip'
+  const registrations = useQuery(registrationsQuery, { webinarId })
 
   if (registrations === undefined) {
     return (
@@ -19,7 +20,7 @@ function WebinarRegistrations({ webinarId }) {
     )
   }
 
-  if (registrations === null || registrations.length === 0) {
+  if (!Array.isArray(registrations) || registrations.length === 0) {
     return (
       <div className="mt-3 border-t border-white/5 pt-3">
         <p className="text-xs text-white/30 font-mono italic">No attendees registered yet.</p>
@@ -49,29 +50,48 @@ function WebinarRegistrations({ webinarId }) {
 
 function timestampToDatetimeLocal(timestamp) {
   if (!timestamp) return ''
-  const date = new Date(timestamp)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
+  try {
+    const date = new Date(timestamp)
+    if (isNaN(date.getTime())) return ''
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
+  } catch (e) {
+    return ''
+  }
 }
 
 function formatDate(timestamp) {
-  return new Date(timestamp).toLocaleDateString('en-ZA', {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+  if (!timestamp) return ''
+  try {
+    const d = new Date(timestamp)
+    if (isNaN(d.getTime())) return String(timestamp)
+    return d.toLocaleDateString('en-ZA', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  } catch (e) {
+    return String(timestamp)
+  }
 }
 
 function formatTime(timestamp) {
-  return new Date(timestamp).toLocaleTimeString('en-ZA', {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  if (!timestamp) return ''
+  try {
+    const d = new Date(timestamp)
+    if (isNaN(d.getTime())) return ''
+    return d.toLocaleTimeString('en-ZA', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } catch (e) {
+    return ''
+  }
 }
 
 export default function AdminPortalPage() {
@@ -79,13 +99,13 @@ export default function AdminPortalPage() {
   const [activeTab, setActiveTab] = useState('newsletters') // 'newsletters' | 'webinars'
 
   // Webinars Data
-  const webinars = useQuery(api.webinars.listAll)
+  const webinars = useQuery(api?.webinars?.listAll ?? 'skip')
   const createWebinar = useMutation(api.webinars.create)
   const updateWebinar = useMutation(api.webinars.update)
   const removeWebinar = useMutation(api.webinars.remove)
 
   // Newsletters Data
-  const newsletters = useQuery(api.newsletters.listAll)
+  const newsletters = useQuery(api?.newsletters?.listAll ?? 'skip')
   const createNewsletter = useMutation(api.newsletters.create)
   const updateNewsletter = useMutation(api.newsletters.update)
   const removeNewsletter = useMutation(api.newsletters.remove)
@@ -110,7 +130,7 @@ export default function AdminPortalPage() {
   // Newsletter Form State
   const initialNewsletterState = {
     title: '',
-    issue: 'Issue #' + (newsletters ? newsletters.length + 1 : 1),
+    issue: 'Issue #' + (Array.isArray(newsletters) ? newsletters.length + 1 : 1),
     category: 'Agritech & Innovation',
     readTime: '4 min read',
     summary: '',
@@ -142,13 +162,18 @@ export default function AdminPortalPage() {
     userEmails.push(user.primaryEmailAddress.emailAddress.toLowerCase())
   }
 
+  const ALLOWED_ADMINS = [
+    'lgumbi2169@gmail.com',
+    'support@premieragric.co.za',
+    'premieragric1@gmail.com',
+  ]
+
   const isAdmin =
     isSignedIn &&
     (user?.publicMetadata?.role === 'admin' ||
       userEmails.some(
         (e) =>
-          e === 'support@premieragric.co.za' ||
-          e === 'lgumbi2169@gmail.com' ||
+          ALLOWED_ADMINS.includes(e) ||
           e.endsWith('@premieragric.co.za')
       ))
 
@@ -158,7 +183,7 @@ export default function AdminPortalPage() {
         <div className="w-16 h-px bg-red-500" />
         <h1 className="font-display text-3xl text-center">Access Denied</h1>
         <p className="text-white/40 text-sm text-center max-w-sm leading-relaxed">
-          You do not have administrative privileges to access this portal. Please sign in with an authorized administrator account.
+          You do not have administrative privileges to access this portal. Please sign in with an authorized administrator account (e.g. lgumbi2169@gmail.com, support@premieragric.co.za, premieragric1@gmail.com).
         </p>
         {isSignedIn ? (
           <Link
@@ -363,10 +388,14 @@ export default function AdminPortalPage() {
     setTimeout(() => setCopiedId(null), 2000)
   }
 
-  const upcomingWebinars =
-    webinars?.filter((w) => w.date + w.duration * 60 * 1000 >= Date.now()) ?? []
-  const pastWebinars =
-    webinars?.filter((w) => w.date + w.duration * 60 * 1000 < Date.now()) ?? []
+  const upcomingWebinars = Array.isArray(webinars)
+    ? webinars.filter((w) => w.date + w.duration * 60 * 1000 >= Date.now())
+    : []
+  const pastWebinars = Array.isArray(webinars)
+    ? webinars.filter((w) => w.date + w.duration * 60 * 1000 < Date.now())
+    : []
+
+  const newsletterList = Array.isArray(newsletters) ? newsletters : []
 
   return (
     <div className="bg-[#061b0e] min-h-screen text-white pt-24 pb-16">
@@ -411,7 +440,7 @@ export default function AdminPortalPage() {
             }`}
           >
             <Newspaper className="w-4 h-4" />
-            Upload Newsletters ({newsletters ? newsletters.length : 0})
+            Upload Newsletters ({newsletterList.length})
           </button>
 
           <button
@@ -427,7 +456,7 @@ export default function AdminPortalPage() {
             }`}
           >
             <Video className="w-4 h-4" />
-            Manage Webinars ({webinars ? webinars.length : 0})
+            Manage Webinars ({Array.isArray(webinars) ? webinars.length : 0})
           </button>
         </div>
       </div>
@@ -669,7 +698,7 @@ export default function AdminPortalPage() {
             <div className="lg:col-span-6 flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <p className="eyebrow text-[var(--gold)]">
-                  Published & Saved Newsletters ({newsletters ? newsletters.length : 0})
+                  Published & Saved Newsletters ({newsletterList.length})
                 </p>
                 <Link
                   href="/newsletters"
@@ -686,7 +715,7 @@ export default function AdminPortalPage() {
                     <div key={i} className="h-32 border border-white/10 bg-white/5 animate-pulse" />
                   ))}
                 </div>
-              ) : newsletters.length === 0 ? (
+              ) : newsletterList.length === 0 ? (
                 <div className="border border-white/10 bg-white/5 p-12 text-center flex flex-col items-center gap-4">
                   <Newspaper className="w-8 h-8 text-white/20" />
                   <p className="text-white/40 font-mono text-sm">No uploaded newsletters yet.</p>
@@ -694,7 +723,7 @@ export default function AdminPortalPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {newsletters.map((item) => (
+                  {newsletterList.map((item) => (
                     <div
                       key={item._id}
                       className="border border-white/10 bg-white/5 p-5 transition-all hover:bg-white/8 rounded-sm"
@@ -853,7 +882,7 @@ export default function AdminPortalPage() {
                       <select
                         value={webinarFormData.topic}
                         onChange={(e) => setWebinarFormData({ ...webinarFormData, topic: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                        className="w-full bg-[#061b0e] border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
                       >
                         <option value="Agribusiness" className="bg-[#061b0e]">Agribusiness</option>
                         <option value="Drone Mapping" className="bg-[#061b0e]">Drone Mapping</option>
@@ -923,7 +952,7 @@ export default function AdminPortalPage() {
                     <div key={i} className="h-44 border border-white/10 bg-white/5 animate-pulse" />
                   ))}
                 </div>
-              ) : webinars.length === 0 ? (
+              ) : !Array.isArray(webinars) || webinars.length === 0 ? (
                 <div className="border border-white/10 bg-white/5 p-12 text-center flex flex-col items-center gap-4">
                   <Video className="w-8 h-8 text-white/20" />
                   <p className="text-white/40 font-mono text-sm">No webinars found in database.</p>
