@@ -10,25 +10,30 @@ import { BookOpen, Search, ArrowLeft, Clock, Calendar, Share2, Check, Send, Imag
 
 function formatDate(timestamp) {
   if (!timestamp) return ''
-  const d = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp)
-  return d.toLocaleDateString('en-ZA', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+  try {
+    const d = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp)
+    if (isNaN(d.getTime())) return String(timestamp || '')
+    return d.toLocaleDateString('en-ZA', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  } catch (e) {
+    return String(timestamp || '')
+  }
 }
 
 function NewslettersContent() {
   const searchParams = useSearchParams()
   const initialId = searchParams?.get('id')
 
-  // Fetch live published newsletters from Convex
-  const convexNewsletters = useQuery(api.newsletters.listPublished)
+  // Safely fetch live published newsletters from Convex
+  const listPublishedQuery = api?.newsletters?.listPublished ? api.newsletters.listPublished : 'skip'
+  const convexNewsletters = useQuery(listPublishedQuery)
 
-  const allNewsletters = [
-    ...(convexNewsletters || []),
-    ...INITIAL_NEWSLETTERS,
-  ]
+  const allNewsletters = Array.isArray(convexNewsletters)
+    ? [...convexNewsletters, ...INITIAL_NEWSLETTERS]
+    : INITIAL_NEWSLETTERS
 
   const [activeCategory, setActiveCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
@@ -48,11 +53,10 @@ function NewslettersContent() {
 
   const filteredNewsletters = allNewsletters.filter((n) => {
     const matchesCat = activeCategory === 'All' || n.category === activeCategory
-    const matchesSearch =
-      n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      n.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      n.content.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesCat && matchesSearch
+    const titleMatch = n.title ? n.title.toLowerCase().includes(searchQuery.toLowerCase()) : false
+    const summaryMatch = n.summary ? n.summary.toLowerCase().includes(searchQuery.toLowerCase()) : false
+    const contentMatch = n.content ? n.content.toLowerCase().includes(searchQuery.toLowerCase()) : false
+    return matchesCat && (titleMatch || summaryMatch || contentMatch)
   })
 
   const handleSubscribe = async (e) => {

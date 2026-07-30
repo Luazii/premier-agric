@@ -1,48 +1,66 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { NEWSLETTERS as INITIAL_NEWSLETTERS } from '../../data/newsletters'
-import { ArrowRight, Newspaper, Calendar, Clock, Sparkles, BookOpen, Video, ChevronRight, Share2, Check, Image as ImageIcon } from 'lucide-react'
+import { ArrowRight, Newspaper, Calendar, Clock, Sparkles, BookOpen, Video, ChevronRight, Share2, Check } from 'lucide-react'
 
 function formatDate(timestamp) {
   if (!timestamp) return ''
-  const d = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp)
-  return d.toLocaleDateString('en-ZA', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+  try {
+    const d = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp)
+    if (isNaN(d.getTime())) return String(timestamp)
+    return d.toLocaleDateString('en-ZA', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  } catch (e) {
+    return String(timestamp || '')
+  }
 }
 
 function formatTime(timestamp) {
   if (!timestamp) return ''
-  const d = new Date(timestamp)
-  return d.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' })
+  try {
+    const d = new Date(timestamp)
+    if (isNaN(d.getTime())) return ''
+    return d.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' })
+  } catch (e) {
+    return ''
+  }
 }
 
 export default function NewsPage() {
   const [selectedNewsletter, setSelectedNewsletter] = useState(null)
   const [copiedId, setCopiedId] = useState(null)
+  const [now, setNow] = useState(null)
 
-  // Fetch live published newsletters from Convex
-  const convexNewsletters = useQuery(api.newsletters.listPublished)
+  useEffect(() => {
+    setNow(Date.now())
+  }, [])
+
+  // Safely fetch published newsletters from Convex
+  const listPublishedQuery = api?.newsletters?.listPublished ? api.newsletters.listPublished : 'skip'
+  const convexNewsletters = useQuery(listPublishedQuery)
   
-  // Combine Convex newsletters (admin uploaded) with initial static newsletters
-  const allNewsletters = [
-    ...(convexNewsletters || []),
-    ...INITIAL_NEWSLETTERS,
-  ]
+  // Combine Convex newsletters (admin uploaded) with initial static newsletters safely
+  const allNewsletters = Array.isArray(convexNewsletters)
+    ? [...convexNewsletters, ...INITIAL_NEWSLETTERS]
+    : INITIAL_NEWSLETTERS
 
   // Top 3 featured newsletters
   const featuredNewsletters = allNewsletters.slice(0, 3)
 
-  // Fetch webinars from Convex
-  const webinars = useQuery(api.webinars.list)
-  const now = Date.now()
-  const upcomingWebinars = webinars?.filter((w) => w.date + w.duration * 60 * 1000 >= now) ?? []
+  // Safely fetch webinars from Convex
+  const webinarsQuery = api?.webinars?.list ? api.webinars.list : 'skip'
+  const webinars = useQuery(webinarsQuery)
+  
+  const upcomingWebinars = Array.isArray(webinars)
+    ? webinars.filter((w) => (now ? w.date + w.duration * 60 * 1000 >= now : true))
+    : []
 
   const handleShare = (e, id) => {
     e.stopPropagation()
