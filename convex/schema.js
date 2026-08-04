@@ -34,6 +34,7 @@ export default defineSchema({
     content: v.string(),
     author: v.string(),
     imageUrl: v.optional(v.string()),
+    images: v.optional(v.array(v.string())),
     highlights: v.optional(v.array(v.string())),
     isPublished: v.boolean(),
     createdAt: v.number(),

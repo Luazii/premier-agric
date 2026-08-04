@@ -138,12 +138,14 @@ export default function AdminPortalPage() {
     content: '',
     author: 'Premier Agric Editorial Desk',
     imageUrl: '',
+    images: [],
     highlightsText: '',
     isPublished: true,
   }
   const [newsletterFormData, setNewsletterFormData] = useState(initialNewsletterState)
   const [editingNewsletterId, setEditingNewsletterId] = useState(null)
   const [selectedNewsletterPhoto, setSelectedNewsletterPhoto] = useState(null)
+  const [selectedExtraPhotos, setSelectedExtraPhotos] = useState([])
 
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -221,6 +223,16 @@ export default function AdminPortalPage() {
     }))
   }
 
+  const handleExtraPhotosChange = (e) => {
+    const files = Array.from(e.target.files || [])
+    if (!files.length) return
+    const validFiles = files.filter((f) => f.size <= 5 * 1024 * 1024)
+    if (validFiles.length < files.length) {
+      alert('Some photos are too large. Please upload images under 5MB.')
+    }
+    setSelectedExtraPhotos((prev) => [...prev, ...validFiles])
+  }
+
   // Submit Newsletter Form
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault()
@@ -245,6 +257,20 @@ export default function AdminPortalPage() {
         storageId = uploadResult.storageId;
       }
 
+      let extraStorageIds = [];
+      if (selectedExtraPhotos.length > 0) {
+        for (const file of selectedExtraPhotos) {
+          const postUrl = await generateUploadUrl();
+          const result = await fetch(postUrl, {
+            method: "POST",
+            headers: { "Content-Type": file.type },
+            body: file,
+          });
+          const uploadResult = await result.json();
+          extraStorageIds.push(uploadResult.storageId);
+        }
+      }
+
       const payload = {
         title: newsletterFormData.title,
         issue: newsletterFormData.issue,
@@ -254,7 +280,9 @@ export default function AdminPortalPage() {
         content: newsletterFormData.content,
         author: newsletterFormData.author,
         imageUrl: !selectedNewsletterPhoto ? (newsletterFormData.imageUrl || undefined) : undefined,
+        images: newsletterFormData.images || [],
         storageId,
+        extraStorageIds: extraStorageIds.length > 0 ? extraStorageIds : undefined,
         highlights: highlightsArray.length > 0 ? highlightsArray : undefined,
         isPublished: newsletterFormData.isPublished,
       }
@@ -273,6 +301,7 @@ export default function AdminPortalPage() {
       setNewsletterFormData(initialNewsletterState)
       setEditingNewsletterId(null)
       setSelectedNewsletterPhoto(null)
+      setSelectedExtraPhotos([])
     } catch (err) {
       setErrorMessage(err.message || 'An error occurred while saving the newsletter.')
     } finally {
@@ -283,6 +312,7 @@ export default function AdminPortalPage() {
   const handleEditNewsletter = (item) => {
     setEditingNewsletterId(item._id)
     setSelectedNewsletterPhoto(null)
+    setSelectedExtraPhotos([])
     setNewsletterFormData({
       title: item.title,
       issue: item.issue,
@@ -292,6 +322,7 @@ export default function AdminPortalPage() {
       content: item.content,
       author: item.author,
       imageUrl: item.imageUrl || '',
+      images: item.images || [],
       highlightsText: item.highlights ? item.highlights.join('\n') : '',
       isPublished: item.isPublished ?? true,
     })
@@ -308,6 +339,7 @@ export default function AdminPortalPage() {
           setEditingNewsletterId(null)
           setNewsletterFormData(initialNewsletterState)
           setSelectedNewsletterPhoto(null)
+          setSelectedExtraPhotos([])
         }
       } catch (err) {
         alert('Failed to delete newsletter: ' + err.message)
@@ -674,7 +706,62 @@ export default function AdminPortalPage() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3 pt-2">
+                  {/* Extra Photos Upload Section */}
+                  <div className="border border-dashed border-white/20 p-4 rounded-sm bg-white/5 mt-4">
+                    <label className="block text-xs font-mono text-[var(--gold)] uppercase mb-2 flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5" />
+                      Attach Additional Images (Magazine Layout)
+                    </label>
+                    
+                    <label className="cursor-pointer px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-mono uppercase tracking-wider text-white flex items-center gap-2 transition-all w-max mb-4">
+                      <Upload className="w-3.5 h-3.5" />
+                      Choose Extra Photos
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleExtraPhotosChange}
+                        className="hidden"
+                      />
+                    </label>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {newsletterFormData.images?.map((url, idx) => (
+                        <div key={`existing-${idx}`} className="relative h-20 border border-white/20 rounded-sm overflow-hidden bg-black/40">
+                          <img src={url} alt="Extra" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setNewsletterFormData(prev => ({
+                                ...prev,
+                                images: prev.images.filter((_, i) => i !== idx)
+                              }))
+                            }}
+                            className="absolute top-1 right-1 px-1.5 py-0.5 bg-red-600/80 hover:bg-red-600 text-white text-[10px] font-mono"
+                          >
+                            X
+                          </button>
+                        </div>
+                      ))}
+                      
+                      {selectedExtraPhotos.map((file, idx) => (
+                        <div key={`new-${idx}`} className="relative h-20 border border-white/20 rounded-sm overflow-hidden bg-black/40 border-[var(--gold)]/50">
+                          <img src={URL.createObjectURL(file)} alt="New Extra" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedExtraPhotos(prev => prev.filter((_, i) => i !== idx))
+                            }}
+                            className="absolute top-1 right-1 px-1.5 py-0.5 bg-red-600/80 hover:bg-red-600 text-white text-[10px] font-mono"
+                          >
+                            X
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-4">
                     <input
                       type="checkbox"
                       id="newsletterPublished"
@@ -702,6 +789,7 @@ export default function AdminPortalPage() {
                           setEditingNewsletterId(null)
                           setNewsletterFormData(initialNewsletterState)
                           setSelectedNewsletterPhoto(null)
+                          setSelectedExtraPhotos([])
                         }}
                         className="px-4 py-3 font-mono text-xs tracking-widest uppercase border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-all"
                       >

@@ -36,7 +36,9 @@ export const create = mutation({
     content: v.string(),
     author: v.string(),
     imageUrl: v.optional(v.string()),
+    images: v.optional(v.array(v.string())),
     storageId: v.optional(v.id("_storage")),
+    extraStorageIds: v.optional(v.array(v.id("_storage"))),
     highlights: v.optional(v.array(v.string())),
     isPublished: v.boolean(),
   },
@@ -45,11 +47,21 @@ export const create = mutation({
     if (args.storageId) {
       imageUrl = await ctx.storage.getUrl(args.storageId);
     }
-    const { storageId, ...rest } = args;
+    
+    let images = args.images || [];
+    if (args.extraStorageIds && args.extraStorageIds.length > 0) {
+      const extraUrls = await Promise.all(
+        args.extraStorageIds.map((id) => ctx.storage.getUrl(id))
+      );
+      images = [...images, ...extraUrls];
+    }
+    
+    const { storageId, extraStorageIds, ...rest } = args;
     
     return await ctx.db.insert('newsletters', {
       ...rest,
       imageUrl,
+      images,
       createdAt: Date.now(),
     })
   },
@@ -66,7 +78,9 @@ export const update = mutation({
     content: v.string(),
     author: v.string(),
     imageUrl: v.optional(v.string()),
+    images: v.optional(v.array(v.string())),
     storageId: v.optional(v.id("_storage")),
+    extraStorageIds: v.optional(v.array(v.id("_storage"))),
     highlights: v.optional(v.array(v.string())),
     isPublished: v.boolean(),
   },
@@ -75,11 +89,21 @@ export const update = mutation({
     if (args.storageId) {
       imageUrl = await ctx.storage.getUrl(args.storageId);
     }
-    const { id, storageId, ...data } = args
+
+    let images = args.images || [];
+    if (args.extraStorageIds && args.extraStorageIds.length > 0) {
+      const extraUrls = await Promise.all(
+        args.extraStorageIds.map((id) => ctx.storage.getUrl(id))
+      );
+      images = [...images, ...extraUrls];
+    }
+
+    const { id, storageId, extraStorageIds, ...data } = args
     
     await ctx.db.patch(id, {
       ...data,
-      ...(imageUrl !== undefined ? { imageUrl } : {})
+      ...(imageUrl !== undefined ? { imageUrl } : {}),
+      ...(images.length > 0 || args.images ? { images } : {})
     })
   },
 })
