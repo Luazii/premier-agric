@@ -109,6 +109,7 @@ export default function AdminPortalPage() {
   const createNewsletter = useMutation(api.newsletters.create)
   const updateNewsletter = useMutation(api.newsletters.update)
   const removeNewsletter = useMutation(api.newsletters.remove)
+  const generateUploadUrl = useMutation(api.newsletters.generateUploadUrl)
 
   // Webinar Form State
   const initialWebinarState = {
@@ -142,6 +143,7 @@ export default function AdminPortalPage() {
   }
   const [newsletterFormData, setNewsletterFormData] = useState(initialNewsletterState)
   const [editingNewsletterId, setEditingNewsletterId] = useState(null)
+  const [selectedNewsletterPhoto, setSelectedNewsletterPhoto] = useState(null)
 
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -212,14 +214,11 @@ export default function AdminPortalPage() {
       alert('Photo is too large. Please upload an image under 5MB.')
       return
     }
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      setNewsletterFormData((prev) => ({
-        ...prev,
-        imageUrl: event.target?.result || '',
-      }))
-    }
-    reader.readAsDataURL(file)
+    setSelectedNewsletterPhoto(file)
+    setNewsletterFormData((prev) => ({
+      ...prev,
+      imageUrl: URL.createObjectURL(file),
+    }))
   }
 
   // Submit Newsletter Form
@@ -234,6 +233,18 @@ export default function AdminPortalPage() {
         ? newsletterFormData.highlightsText.split('\n').map((s) => s.trim()).filter(Boolean)
         : []
 
+      let storageId = undefined;
+      if (selectedNewsletterPhoto) {
+        const postUrl = await generateUploadUrl();
+        const result = await fetch(postUrl, {
+          method: "POST",
+          headers: { "Content-Type": selectedNewsletterPhoto.type },
+          body: selectedNewsletterPhoto,
+        });
+        const uploadResult = await result.json();
+        storageId = uploadResult.storageId;
+      }
+
       const payload = {
         title: newsletterFormData.title,
         issue: newsletterFormData.issue,
@@ -242,7 +253,8 @@ export default function AdminPortalPage() {
         summary: newsletterFormData.summary,
         content: newsletterFormData.content,
         author: newsletterFormData.author,
-        imageUrl: newsletterFormData.imageUrl || undefined,
+        imageUrl: !selectedNewsletterPhoto ? (newsletterFormData.imageUrl || undefined) : undefined,
+        storageId,
         highlights: highlightsArray.length > 0 ? highlightsArray : undefined,
         isPublished: newsletterFormData.isPublished,
       }
@@ -260,6 +272,7 @@ export default function AdminPortalPage() {
 
       setNewsletterFormData(initialNewsletterState)
       setEditingNewsletterId(null)
+      setSelectedNewsletterPhoto(null)
     } catch (err) {
       setErrorMessage(err.message || 'An error occurred while saving the newsletter.')
     } finally {
@@ -269,6 +282,7 @@ export default function AdminPortalPage() {
 
   const handleEditNewsletter = (item) => {
     setEditingNewsletterId(item._id)
+    setSelectedNewsletterPhoto(null)
     setNewsletterFormData({
       title: item.title,
       issue: item.issue,
@@ -293,6 +307,7 @@ export default function AdminPortalPage() {
         if (editingNewsletterId === id) {
           setEditingNewsletterId(null)
           setNewsletterFormData(initialNewsletterState)
+          setSelectedNewsletterPhoto(null)
         }
       } catch (err) {
         alert('Failed to delete newsletter: ' + err.message)
@@ -647,7 +662,10 @@ export default function AdminPortalPage() {
                         />
                         <button
                           type="button"
-                          onClick={() => setNewsletterFormData((prev) => ({ ...prev, imageUrl: '' }))}
+                          onClick={() => {
+                            setNewsletterFormData((prev) => ({ ...prev, imageUrl: '' }))
+                            setSelectedNewsletterPhoto(null)
+                          }}
                           className="absolute top-2 right-2 px-2 py-1 bg-red-600/80 hover:bg-red-600 text-white text-[10px] font-mono"
                         >
                           Remove Photo
@@ -683,6 +701,7 @@ export default function AdminPortalPage() {
                         onClick={() => {
                           setEditingNewsletterId(null)
                           setNewsletterFormData(initialNewsletterState)
+                          setSelectedNewsletterPhoto(null)
                         }}
                         className="px-4 py-3 font-mono text-xs tracking-widest uppercase border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-all"
                       >
