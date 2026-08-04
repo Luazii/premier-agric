@@ -162,7 +162,7 @@ function NewslettersContent() {
                 >
                   <div>
                     {newsletter.imageUrl && (
-                      <div className="w-full h-52 -mx-8 -mt-8 mb-6 border-b border-white/10 overflow-hidden relative">
+                      <div className="h-52 -mx-8 -mt-8 mb-6 border-b border-white/10 overflow-hidden relative">
                         <img
                           src={newsletter.imageUrl}
                           alt={newsletter.title}
@@ -261,7 +261,7 @@ function NewslettersContent() {
             </button>
 
             {selectedNewsletter.imageUrl && (
-              <div className="w-full h-64 -mx-6 -mt-6 md:-mx-10 md:-mt-10 mb-6 overflow-hidden border-b border-white/10">
+              <div className="h-64 -mx-6 -mt-6 md:-mx-10 md:-mt-10 mb-6 overflow-hidden border-b border-white/10">
                 <img src={selectedNewsletter.imageUrl} alt={selectedNewsletter.title} className="w-full h-full object-cover" />
               </div>
             )}
