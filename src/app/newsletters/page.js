@@ -287,46 +287,65 @@ function NewslettersContent() {
               {(() => {
                 const paragraphs = selectedNewsletter.content?.split(/\n\n+/)?.filter(p => p.trim()) || [];
                 const extraImages = selectedNewsletter.images || [];
-                let imageIndex = 0;
                 
-                return paragraphs.map((para, i) => {
-                  let imageEl = null;
-                  if (i % 2 === 1 && imageIndex < extraImages.length) {
-                    const isLeft = imageIndex % 2 === 0;
-                    imageEl = (
-                      <div 
-                        key={`img-${imageIndex}`}
-                        className={`w-full sm:w-[45%] ${isLeft ? 'sm:float-left sm:mr-6' : 'sm:float-right sm:ml-6'} mb-6 border border-white/10 p-1 bg-white/5 rounded-sm`}
-                      >
-                        <img 
-                          src={extraImages[imageIndex]} 
-                          alt="Article context" 
-                          className="w-full h-auto object-cover" 
-                        />
-                      </div>
-                    );
-                    imageIndex++;
-                  }
+                const P = paragraphs.length;
+                const I = extraImages.length;
+                const placementMap = new Map();
+                let placedCount = 0;
 
-                  return (
-                    <React.Fragment key={`para-${i}`}>
-                      {imageEl}
-                      <p className="whitespace-pre-line mb-6">{para}</p>
-                    </React.Fragment>
-                  );
-                });
+                if (I >= P) {
+                  for (let i = 0; i < P; i++) {
+                    placementMap.set(i, placedCount++);
+                  }
+                } else if (I > 0) {
+                  const step = P / I;
+                  for (let k = 0; k < I; k++) {
+                    const paraIndex = Math.floor(k * step + step / 2);
+                    placementMap.set(paraIndex, placedCount++);
+                  }
+                }
+                
+                return (
+                  <>
+                    {paragraphs.map((para, i) => {
+                      let imageEl = null;
+                      if (placementMap.has(i)) {
+                        const imgIdx = placementMap.get(i);
+                        const isLeft = imgIdx % 2 === 0;
+                        imageEl = (
+                          <div 
+                            key={`img-${imgIdx}`}
+                            className={`w-full sm:w-[45%] ${isLeft ? 'sm:float-left sm:mr-6' : 'sm:float-right sm:ml-6'} mb-6 border border-white/10 p-1 bg-white/5 rounded-sm`}
+                          >
+                            <img 
+                              src={extraImages[imgIdx]} 
+                              alt="Article context" 
+                              className="w-full h-auto object-cover" 
+                            />
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <React.Fragment key={`para-${i}`}>
+                          {imageEl}
+                          <p className="whitespace-pre-line mb-6">{para}</p>
+                        </React.Fragment>
+                      );
+                    })}
+                    
+                    {I > placedCount && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 clear-both w-full">
+                        {extraImages.slice(placedCount).map((imgUrl, i) => (
+                          <div key={`extra-fallback-${i}`} className="border border-white/10 p-1 bg-white/5">
+                            <img src={imgUrl} alt="Additional context" className="w-full h-auto" />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                );
               })()}
-              
-              {/* Fallback for remaining images if there are more images than paragraphs can accommodate */}
-              {selectedNewsletter.images && selectedNewsletter.images.length > Math.floor(selectedNewsletter.content?.split(/\n\n+/).filter(p => p.trim()).length / 2) && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 clear-both">
-                  {selectedNewsletter.images.slice(Math.floor(selectedNewsletter.content?.split(/\n\n+/).filter(p => p.trim()).length / 2)).map((imgUrl, i) => (
-                    <div key={`extra-fallback-${i}`} className="border border-white/10 p-1 bg-white/5">
-                      <img src={imgUrl} alt="Additional context" className="w-full h-auto" />
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
             {selectedNewsletter.highlights && selectedNewsletter.highlights.length > 0 && (
