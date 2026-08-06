@@ -131,9 +131,20 @@ function WebinarCard({ webinar }) {
       <div className="px-6 md:px-8 pb-6 md:pb-8">
         {isPast ? (
           <div className="flex gap-2">
-            <span className="flex-1 text-center py-3 text-white/30 text-sm font-mono tracking-wide border border-white/10">
-              ENDED
-            </span>
+            {webinar.recordingUrl ? (
+              <a
+                href={webinar.recordingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 block text-center py-3 text-sm font-mono tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all duration-300"
+              >
+                PLAY NOW
+              </a>
+            ) : (
+              <span className="flex-1 text-center py-3 text-white/30 text-sm font-mono tracking-wide border border-white/10">
+                ENDED
+              </span>
+            )}
             <button
               onClick={handleShare}
               title="Copy share link"

@@ -70,6 +70,7 @@ export const create = mutation({
     maxAttendees: v.optional(v.number()),
     imageUrl: v.optional(v.string()),
     meetingLink: v.optional(v.string()),
+    recordingUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert('webinars', {
@@ -92,6 +93,7 @@ export const update = mutation({
     maxAttendees: v.optional(v.number()),
     imageUrl: v.optional(v.string()),
     meetingLink: v.optional(v.string()),
+    recordingUrl: v.optional(v.string()),
     isPublished: v.boolean(),
   },
   handler: async (ctx, args) => {

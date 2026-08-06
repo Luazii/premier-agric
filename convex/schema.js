@@ -14,6 +14,7 @@ export default defineSchema({
     imageUrl: v.optional(v.string()),
     isPublished: v.boolean(),
     meetingLink: v.optional(v.string()),
+    recordingUrl: v.optional(v.string()),
   }),
   registrations: defineTable({
     webinarId: v.id('webinars'),

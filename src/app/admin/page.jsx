@@ -123,6 +123,7 @@ export default function AdminPortalPage() {
     maxAttendees: '',
     imageUrl: '',
     meetingLink: '',
+    recordingUrl: '',
     isPublished: true,
   }
   const [webinarFormData, setWebinarFormData] = useState(initialWebinarState)
@@ -371,6 +372,7 @@ export default function AdminPortalPage() {
         maxAttendees: webinarFormData.maxAttendees ? Number(webinarFormData.maxAttendees) : undefined,
         imageUrl: webinarFormData.imageUrl || undefined,
         meetingLink: webinarFormData.meetingLink || undefined,
+        recordingUrl: webinarFormData.recordingUrl || undefined,
       }
 
       if (editingWebinarId) {
@@ -407,6 +409,7 @@ export default function AdminPortalPage() {
       maxAttendees: webinar.maxAttendees ?? '',
       imageUrl: webinar.imageUrl ?? '',
       meetingLink: webinar.meetingLink ?? '',
+      recordingUrl: webinar.recordingUrl ?? '',
       isPublished: webinar.isPublished ?? true,
     })
     setSuccessMessage('')
@@ -1011,6 +1014,19 @@ export default function AdminPortalPage() {
                         className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-white/40 uppercase mb-1.5">
+                      Recording URL (for Past Sessions)
+                    </label>
+                    <input
+                      type="url"
+                      value={webinarFormData.recordingUrl}
+                      onChange={(e) => setWebinarFormData({ ...webinarFormData, recordingUrl: e.target.value })}
+                      placeholder="e.g. https://youtube.com/watch?v=..."
+                      className="w-full bg-white/5 border border-white/10 p-3 text-sm text-white focus:outline-none focus:border-[var(--gold)]/50 transition-colors"
+                    />
                   </div>
 
                   <div className="flex items-center gap-3 pt-2">
