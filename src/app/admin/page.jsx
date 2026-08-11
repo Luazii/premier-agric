@@ -188,7 +188,7 @@ export default function AdminPortalPage() {
         <div className="w-16 h-px bg-red-500" />
         <h1 className="font-display text-3xl text-center">Access Denied</h1>
         <p className="text-white/40 text-sm text-center max-w-sm leading-relaxed">
-          You do not have administrative privileges to access this portal. Please sign in with an authorized administrator account (e.g. lgumbi2169@gmail.com, support@premieragric.co.za, premieragric1@gmail.com).
+          You do not have administrative privileges to access this portal. Please sign in with an authorized administrator account.
         </p>
         {isSignedIn ? (
           <Link
