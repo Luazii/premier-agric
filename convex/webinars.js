@@ -105,7 +105,29 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id('webinars') },
   handler: async (ctx, args) => {
+    const registrations = await ctx.db
+      .query('registrations')
+      .withIndex('by_webinar', (q) => q.eq('webinarId', args.id))
+      .collect()
+    for (const reg of registrations) {
+      await ctx.db.delete(reg._id)
+    }
     await ctx.db.delete(args.id)
+  },
+})
+
+export const clearAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const webinars = await ctx.db.query('webinars').collect()
+    for (const w of webinars) {
+      await ctx.db.delete(w._id)
+    }
+    const registrations = await ctx.db.query('registrations').collect()
+    for (const r of registrations) {
+      await ctx.db.delete(r._id)
+    }
+    return { deletedWebinars: webinars.length, deletedRegistrations: registrations.length }
   },
 })
 
@@ -115,4 +137,5 @@ export const listAll = query({
     return await ctx.db.query('webinars').collect()
   },
 })
+
 
