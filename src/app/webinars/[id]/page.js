@@ -243,11 +243,35 @@ export default function WebinarRoomPage() {
           </div>
         )}
 
-        {/* Past webinar — no room */}
-        {isSignedIn && isPast && (
-          <div className="flex flex-col items-center justify-center gap-4 py-16 border border-white/10 bg-white/5">
-            <p className="text-white/40 font-mono text-sm tracking-wide">THIS SESSION HAS ENDED</p>
-            <p className="text-white/25 text-xs">Check upcoming sessions for future webinars.</p>
+        {/* Past webinar — show recording if available */}
+        {isPast && (
+          <div className="flex flex-col items-center justify-center gap-6 py-16 border border-white/10 bg-white/5 text-center px-4">
+            {webinar.recordingUrl ? (
+              <>
+                <div className="w-12 h-px bg-[var(--gold)]" />
+                <p className="font-display text-2xl">Session Recording</p>
+                <p className="text-white/50 text-sm max-w-md">
+                  This session has ended. Watch the full recording below.
+                </p>
+                <a
+                  href={webinar.recordingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 font-mono text-sm tracking-widest uppercase bg-[var(--gold)] text-[var(--forest)] hover:bg-[var(--gold)]/90 transition-all font-semibold"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                  PLAY RECORDING
+                </a>
+                <div className="w-12 h-px bg-[var(--gold)]" />
+              </>
+            ) : (
+              <>
+                <p className="text-white/40 font-mono text-sm tracking-wide">THIS SESSION HAS ENDED</p>
+                <p className="text-white/25 text-xs">Check upcoming sessions for future webinars.</p>
+              </>
+            )}
           </div>
         )}
 
