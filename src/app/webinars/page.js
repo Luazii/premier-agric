@@ -361,8 +361,8 @@ export default function WebinarsPage() {
 
               {past.length > 0 && (
                 <div className="mt-20">
-                  <p className="eyebrow text-white/30 mb-8">Past sessions</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-50">
+                  <p className="eyebrow text-[var(--gold)] mb-8">Past sessions</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {past.map((w) => (
                       <WebinarCard key={w._id} webinar={w} />
                     ))}

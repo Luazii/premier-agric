@@ -28,7 +28,22 @@ function formatTime(timestamp) {
 
 export default function WebinarRoomPage() {
   const { id } = useParams()
-  const { isSignedIn, user } = useUser()
+  const { isLoaded, isSignedIn, user } = useUser()
+
+  // Compute admin status first — `registered` depends on it
+  const userEmails = (user?.emailAddresses || []).map((e) => e.emailAddress?.toLowerCase()).filter(Boolean)
+  if (user?.primaryEmailAddress?.emailAddress) {
+    userEmails.push(user.primaryEmailAddress.emailAddress.toLowerCase())
+  }
+  const ALLOWED_ADMINS = ['lgumbi2169@gmail.com', 'support@premieragric.co.za', 'premieragric1@gmail.com']
+  const isAdmin =
+    isSignedIn &&
+    (user?.publicMetadata?.role === 'admin' ||
+      userEmails.some(
+        (e) =>
+          ALLOWED_ADMINS.includes(e) ||
+          e.endsWith('@premieragric.co.za')
+      ))
 
   const webinar = useQuery(api.webinars.get, id ? { id } : 'skip')
   const register = useMutation(api.registrations.register)
@@ -54,21 +69,8 @@ export default function WebinarRoomPage() {
     }
   }
 
-  const registered = isRegistered || justRegistered
-  const userEmails = (user?.emailAddresses || []).map((e) => e.emailAddress?.toLowerCase()).filter(Boolean)
-  if (user?.primaryEmailAddress?.emailAddress) {
-    userEmails.push(user.primaryEmailAddress.emailAddress.toLowerCase())
-  }
-
-  const ALLOWED_ADMINS = ['lgumbi2169@gmail.com', 'support@premieragric.co.za', 'premieragric1@gmail.com']
-  const isAdmin =
-    isSignedIn &&
-    (user?.publicMetadata?.role === 'admin' ||
-      userEmails.some(
-        (e) =>
-          ALLOWED_ADMINS.includes(e) ||
-          e.endsWith('@premieragric.co.za')
-      ))
+  // Admins bypass the registration requirement — they host the session
+  const registered = isAdmin || isRegistered || justRegistered
 
   const now = Date.now()
   const startTime = webinar ? webinar.date - 10 * 60 * 1000 : 0
@@ -112,7 +114,7 @@ export default function WebinarRoomPage() {
     }
   }
 
-  if (webinar === undefined || (isSignedIn && isRegistered === undefined)) {
+  if (!isLoaded || webinar === undefined || (isSignedIn && isRegistered === undefined)) {
     return (
       <div className="bg-[#061b0e] min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border border-[var(--gold)]/40 border-t-[var(--gold)] rounded-full animate-spin" />
@@ -254,13 +256,15 @@ export default function WebinarRoomPage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-emerald-400 font-mono text-xs tracking-widest">● LIVE SESSION ROOM</span>
-              <button
-                onClick={handleUnregister}
-                disabled={loading}
-                className="text-xs text-white/25 hover:text-white/50 font-mono transition-colors"
-              >
-                Cancel registration
-              </button>
+              {!isAdmin && (
+                <button
+                  onClick={handleUnregister}
+                  disabled={loading}
+                  className="text-xs text-white/25 hover:text-white/50 font-mono transition-colors"
+                >
+                  Cancel registration
+                </button>
+              )}
             </div>
             
             {webinar.meetingLink ? (
