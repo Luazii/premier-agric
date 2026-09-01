@@ -308,7 +308,16 @@ export default function WebinarRoomPage() {
         <div className="border-t border-white/10 pt-8 grid md:grid-cols-2 gap-8">
           <div>
             <p className="eyebrow text-[var(--gold)] mb-4">About this session</p>
-            <p className="text-white/60 leading-relaxed text-sm">{webinar.description}</p>
+            <div className="flex flex-col gap-3">
+              {webinar.description
+                .split(/\n+/)
+                .filter((p) => p.trim())
+                .map((para, i) => (
+                  <p key={i} className="text-white/60 leading-relaxed text-sm">
+                    {para.trim()}
+                  </p>
+                ))}
+            </div>
           </div>
           <div className="flex flex-col gap-4">
             <p className="eyebrow text-[var(--gold)] mb-0">Details</p>
