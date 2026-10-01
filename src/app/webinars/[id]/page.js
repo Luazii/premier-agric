@@ -319,6 +319,7 @@ export default function WebinarRoomPage() {
                 <LiveKitRoomComponent
                   roomName={roomName}
                   displayName={user.fullName ?? user.primaryEmailAddress?.emailAddress}
+                  isAdmin={isAdmin}
                 />
                 <p className="text-xs text-white/25 font-mono text-center">
                   Room · {roomName} · Only registered attendees see this room

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
 import { ConvexHttpClient } from 'convex/browser';
 import { api } from '../../../../convex/_generated/api';
+import { isAdminUser, getRoomService, getRoomState, HOST_ROLE } from '@/lib/livekit-server';
 
 export async function GET(request) {
   try {
@@ -38,21 +39,7 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
     }
 
-    // Determine admin status
-    const userEmails = (user?.emailAddresses || []).map((e) => e.emailAddress?.toLowerCase()).filter(Boolean);
-    if (user?.primaryEmailAddress?.emailAddress) {
-      userEmails.push(user.primaryEmailAddress.emailAddress.toLowerCase());
-    }
-    const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase()) : [];
-    const ALLOWED_ADMINS = ['lgumbi2169@gmail.com', 'support@premieragric.co.za', 'premieragric1@gmail.com'];
-    const isAdmin =
-      user?.publicMetadata?.role === 'admin' ||
-      userEmails.some(
-        (e) =>
-          adminEmails.includes(e) ||
-          ALLOWED_ADMINS.includes(e) ||
-          e.endsWith('@premieragric.co.za')
-      );
+    const isAdmin = isAdminUser(user);
 
     // Verify registration and timing window if user is not an admin
     if (webinarId && !isAdmin) {
@@ -94,15 +81,33 @@ export async function GET(request) {
 
     const participantIdentity = user?.id || `anon_${Math.random().toString(36).substring(2, 10)}`;
 
+    // Apply host moderation for this session: bans and listen-only mode
+    let canPublish = true;
+    if (!isAdmin) {
+      const roomService = getRoomService();
+      try {
+        const roomState = await getRoomState(roomService, roomName);
+        if (roomState.banned.includes(participantIdentity)) {
+          return NextResponse.json({ error: 'Forbidden: You have been removed from this session by the host' }, { status: 403 });
+        }
+        canPublish = roomState.attendeesCanPublish;
+      } catch (err) {
+        // The room may not exist yet; fall back to defaults
+        console.error('Failed to read LiveKit room state:', err);
+      }
+    }
+
     const at = new AccessToken(apiKey, apiSecret, {
       identity: participantIdentity,
       name: participantName,
+      attributes: isAdmin ? { role: HOST_ROLE } : undefined,
     });
 
     at.addGrant({
       roomJoin: true,
       room: roomName,
-      canPublish: true,
+      canPublish,
+      canPublishData: true,
       canSubscribe: true,
       roomAdmin: isAdmin, // Grants admin controls in the UI if true
     });
